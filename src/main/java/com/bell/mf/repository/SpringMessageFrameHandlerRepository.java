@@ -22,60 +22,41 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 	private ApplicationContext applicationContext;
 	
 	/**
-	 * 保存指令码和spring中的beanName的对应关系
+	 * 保存指令码和spring中的HandlerStore的对应关系
+	 * COMMAND_CODE_MATCH__HANDLER_STORE_MAP
 	 */
-	private static Map<String, String> MESSAGE_FRAME_HANDLER_MAP = new HashMap<>(128);
-	
-	/**
-	 * 保存指令码和方法的对应关系
-	 */
-	private static Map<String, Method> COMMAND_CODE_WITH_METHOD_MAP = new HashMap<>(128);
-	
-	/**
-	 * 保存指令码和方法的参数名对应关系
-	 */
-	private static Map<String, String[]> COMMAND_CODE_WITH_METHOD_PARAMETER_NAMES = new HashMap<>(128);
+	private static Map<String, HandlerStore> COMMAND_CODE_MATCH_HANDLER_STORE_MAP = new HashMap<>(128);
 	
 	@Override
-	public void setMessageFrameHandler(MessageFrameHandler messageFrameHandler, String beanName) {
-		// 存储指令码和方法对应关系
-		Method[] declaredMethods = messageFrameHandler.getClass().getDeclaredMethods();
-		// 存储保存
-		storeCommandCodeWithMethod(declaredMethods);
-		storeCommandCodeWithMethodParameterNames(declaredMethods);
-		storeCommandCodeWithHandler(declaredMethods, beanName);
+	public void setHandler(MessageFrameHandler messageFrameHandler, String beanName) {
+		storeCommandCodeWithMap(messageFrameHandler.getClass().getDeclaredMethods(), beanName);
 	}
 
-	protected void storeCommandCodeWithHandler(Method[] declaredMethods, String beanName) {
+	protected void storeCommandCodeWithMap(Method[] declaredMethods, String beanName) {
 		for (Method method : declaredMethods) {
 			CommandCode annotation = method.getAnnotation(CommandCode.class);
 			if (annotation != null) {
-				String put = MESSAGE_FRAME_HANDLER_MAP.put(annotation.value(), beanName);
+				HandlerStore handlerStore = new HandlerStore();
+				handlerStore.setBeanName(beanName);
+				handlerStore.setMethod(method);
+				handlerStore.setParameterNames(getParameterNames(method));
+				HandlerStore put = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.put(annotation.value(), handlerStore);
 				if (put != null) {
-					throw new RuntimeException(method.getName()+"指令码重复，在"+beanName+"类也有指令码"+annotation.value());
+					String methodName = method.getDeclaringClass().getName()+"."+method.getName();
+					String OtherMethodName = put.getMethod().getDeclaringClass().getName()+"."+put.getMethod().getName();
+					throw new RuntimeException(String.format("%s()和%s()指令码重复，指令码是：%s", methodName, OtherMethodName, annotation.value()));
 				}
 			}
 		}
 	}
 
-	/**
-	 * 保存指令码和方法参数名对应关系
-	 * @param declaredMethods
-	 */
-	protected void storeCommandCodeWithMethodParameterNames(Method[] declaredMethods) {
-		for (Method method : declaredMethods) {
-			CommandCode annotation = method.getAnnotation(CommandCode.class);
-			if (annotation != null) {
-				ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
-				String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
-				checkMethodParameterNames(parameterNames);
-				String[] put = COMMAND_CODE_WITH_METHOD_PARAMETER_NAMES.put(annotation.value(), parameterNames);
-				if (put != null) {
-					throw new RuntimeException(method.getName()+"的指令码重复！");
-				}
-			}
-		}
+	protected String[] getParameterNames(Method method) {
+		ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+		String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
+		checkMethodParameterNames(parameterNames);
+		return parameterNames;
 	}
+
 	
 	/**
 	 * 检查方法的参数名是否支持
@@ -87,20 +68,7 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 			} else if (ParameterName.MESSAGE_FRAME.getName().equals(parameterName)) {
 			} else if (ParameterName.MESSAGE.getName().equals(parameterName)) {
 			} else {
-				ParameterName[] values = ParameterName.values();
-				throw new RuntimeException(parameterName+"参数名不支持，参数名只支持ParameterName枚举类参数"+Arrays.asList(values));
-			}
-		}
-	}
-
-	protected void storeCommandCodeWithMethod(Method[] declaredMethods) {
-		for (Method method : declaredMethods) {
-			CommandCode annotation = method.getAnnotation(CommandCode.class);
-			if (annotation != null) {
-				Method put = COMMAND_CODE_WITH_METHOD_MAP.put(annotation.value(), method);
-				if (put != null) {
-					throw new RuntimeException(method.getName()+"和"+put.getName()+" 重复");
-				}
+				throw new RuntimeException(parameterName+"参数名不支持，参数名只支持ParameterName枚举类参数"+ParameterName.getAllName());
 			}
 		}
 	}
@@ -110,7 +78,11 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 		if (isEmpty(commandCode)) {
 			return null;
 		}
-		String beanName = MESSAGE_FRAME_HANDLER_MAP.get(commandCode.substring(0, 2));
+		HandlerStore store = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.get(commandCode);
+		if (store == null) {
+			return null;
+		}
+		String beanName = store.getBeanName();
 		return beanName == null ? null : (MessageFrameHandler) applicationContext.getBean(beanName);
 	}
 
@@ -119,7 +91,11 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 		if (isEmpty(commandCode)) {
 			return null;
 		}
-		return COMMAND_CODE_WITH_METHOD_MAP.get(commandCode);
+		HandlerStore store = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.get(commandCode);
+		if (store == null) {
+			return null;
+		}
+		return store.getMethod();
 	}
 	
 	@Override
@@ -127,7 +103,11 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 		if (isEmpty(commandCode)) {
 			return null;
 		}
-		return COMMAND_CODE_WITH_METHOD_PARAMETER_NAMES.get(commandCode);
+		HandlerStore store = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.get(commandCode);
+		if (store == null) {
+			return null;
+		}
+		return store.getParameterNames();
 	}
 	
 	private boolean isEmpty(String commandCode) {
@@ -142,8 +122,38 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 	@Override
 	public void destroy() throws Exception {
 		this.applicationContext = null;
-		MESSAGE_FRAME_HANDLER_MAP.clear();
-		COMMAND_CODE_WITH_METHOD_MAP.clear();
-		COMMAND_CODE_WITH_METHOD_PARAMETER_NAMES.clear();
+		COMMAND_CODE_MATCH_HANDLER_STORE_MAP.clear();
 	}
+	
+	
+	class HandlerStore{
+		private String beanName;
+		private Method method;
+		private String[] parameterNames;
+		public String getBeanName() {
+			return beanName;
+		}
+		public void setBeanName(String beanName) {
+			this.beanName = beanName;
+		}
+		public Method getMethod() {
+			return method;
+		}
+		public void setMethod(Method method) {
+			this.method = method;
+		}
+		public String[] getParameterNames() {
+			return parameterNames;
+		}
+		public void setParameterNames(String[] parameterNames) {
+			this.parameterNames = parameterNames;
+		}
+		@Override
+		public String toString() {
+			return "HandlerStore [beanName=" + beanName + ", method=" + method + ", parameterNames="
+					+ Arrays.toString(parameterNames) + "]";
+		}
+		
+	}
+	
 }

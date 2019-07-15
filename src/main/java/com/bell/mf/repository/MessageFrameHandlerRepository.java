@@ -17,7 +17,7 @@ public interface MessageFrameHandlerRepository {
 	 * @param beanName
 	 * @return
 	 */
-	void setMessageFrameHandler(MessageFrameHandler messageFrameable, String beanName);
+	void setHandler(MessageFrameHandler messageFrameable, String beanName);
 	
 	/**
 	 * 根据指令码从仓库里或消息帧处理器
