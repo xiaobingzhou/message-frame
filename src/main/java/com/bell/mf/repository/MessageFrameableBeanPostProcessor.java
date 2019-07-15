@@ -1,4 +1,4 @@
-package com.bell.springboot.ci.repository;
+package com.bell.mf.repository;
 
 import java.util.Objects;
 
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
-import com.bell.springboot.ci.handler.MessageFrameHandler;
+import com.bell.mf.handler.MessageFrameHandler;
 
 
 @Component

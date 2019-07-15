@@ -1,4 +1,4 @@
-package com.bell.springboot.ci.repository;
+package com.bell.mf.repository;
 
 /**
  * 支持的参数名

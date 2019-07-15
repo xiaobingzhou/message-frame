@@ -1,4 +1,4 @@
-package com.bell.springboot.ci;
+package com.bell.mf;
 
 /**
  * 报文帧格式

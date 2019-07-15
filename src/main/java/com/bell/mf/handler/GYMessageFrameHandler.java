@@ -1,11 +1,11 @@
-package com.bell.springboot.ci.handler;
+package com.bell.mf.handler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.bell.springboot.ci.MessageFrame;
-import com.bell.springboot.ci.annotation.CommandCode;
-import com.bell.springboot.ci.repository.MessageFrameHandlerRepository;
+import com.bell.mf.MessageFrame;
+import com.bell.mf.annotation.CommandCode;
+import com.bell.mf.repository.MessageFrameHandlerRepository;
 
 @Component
 public class GYMessageFrameHandler extends AbstractMessageFrameHandler implements MessageFrameHandler{

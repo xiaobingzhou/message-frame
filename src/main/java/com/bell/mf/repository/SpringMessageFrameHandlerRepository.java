@@ -1,4 +1,4 @@
-package com.bell.springboot.ci.repository;
+package com.bell.mf.repository;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -13,8 +13,8 @@ import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.stereotype.Component;
 
-import com.bell.springboot.ci.annotation.CommandCode;
-import com.bell.springboot.ci.handler.MessageFrameHandler;
+import com.bell.mf.annotation.CommandCode;
+import com.bell.mf.handler.MessageFrameHandler;
 
 @Component
 public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerRepository, ApplicationContextAware, DisposableBean{

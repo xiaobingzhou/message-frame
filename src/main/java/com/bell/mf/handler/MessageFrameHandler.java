@@ -1,6 +1,6 @@
-package com.bell.springboot.ci.handler;
+package com.bell.mf.handler;
 
-import com.bell.springboot.ci.MessageFrame;
+import com.bell.mf.MessageFrame;
 
 /**
  * 定义消息帧处理器接口

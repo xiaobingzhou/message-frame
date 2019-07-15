@@ -1,13 +1,13 @@
-package com.bell.springboot.ci.handler;
+package com.bell.mf.handler;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.bell.springboot.ci.MessageFrame;
-import com.bell.springboot.ci.repository.MessageFrameHandlerRepository;
-import com.bell.springboot.ci.repository.ParameterName;
+import com.bell.mf.MessageFrame;
+import com.bell.mf.repository.MessageFrameHandlerRepository;
+import com.bell.mf.repository.ParameterName;
 
 public abstract class AbstractMessageFrameHandler implements MessageFrameHandler {
 

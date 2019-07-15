@@ -1,8 +1,8 @@
-package com.bell.springboot.ci.repository;
+package com.bell.mf.repository;
 
 import java.lang.reflect.Method;
 
-import com.bell.springboot.ci.handler.MessageFrameHandler;
+import com.bell.mf.handler.MessageFrameHandler;
 
 /**
  * 保存消息帧处理器的仓库
