@@ -1,0 +1,19 @@
+package com.bell.springboot.ci.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface CommandCode {
+
+	/**
+	 * 指令码
+	 * @return
+	 */
+	String value();
+	
+}
