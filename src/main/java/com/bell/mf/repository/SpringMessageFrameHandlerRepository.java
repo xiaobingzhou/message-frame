@@ -68,6 +68,7 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 			if (ParameterName.DEVICE_ID.getName().equals(parameterName)) {
 			} else if (ParameterName.MESSAGE_FRAME.getName().equals(parameterName)) {
 			} else if (ParameterName.MESSAGE.getName().equals(parameterName)) {
+			} else if (ParameterName.SYS_DATE.getName().equals(parameterName)) {
 			} else {
 				throw new BeanCreationException(String.format("%s参数名不支持，参数名只支持ParameterName枚举类参数%s", parameterName, ParameterName.getAllName()));
 			}
@@ -127,9 +128,9 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 	}
 	
 	protected interface Store{
-		public String getBeanName();
-		public Method getMethod();
-		public String[] getParameterNames();
+		String getBeanName();
+		Method getMethod();
+		String[] getParameterNames();
 	}
 	class HandlerStore implements Store{
 		private String beanName;
