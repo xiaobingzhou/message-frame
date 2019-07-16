@@ -9,7 +9,7 @@ import java.util.List;
  *
  */
 public enum ParameterName {
-	DEVICE_ID("deviceId"), MESSAGE_FRAME("messageFrame"), MESSAGE("message");
+	DEVICE_ID("deviceId"), MESSAGE_FRAME("messageFrame"), MESSAGE("message"), SYS_DATE("sysDate");
 	String name;
 	private ParameterName(String name) {
 		this.name = name;

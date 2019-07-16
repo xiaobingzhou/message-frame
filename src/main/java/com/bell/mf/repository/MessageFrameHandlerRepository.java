@@ -13,11 +13,11 @@ public interface MessageFrameHandlerRepository {
 	
 	/**
 	 * 设置消息帧处理器到仓库里
-	 * @param messageFrameable
+	 * @param messageFrameHandler
 	 * @param beanName
 	 * @return
 	 */
-	void setHandler(MessageFrameHandler messageFrameable, String beanName);
+	void setHandler(MessageFrameHandler messageFrameHandler, String beanName);
 	
 	/**
 	 * 根据指令码从仓库里或消息帧处理器
