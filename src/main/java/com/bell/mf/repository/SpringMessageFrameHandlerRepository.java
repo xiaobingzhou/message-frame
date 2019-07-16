@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -23,9 +24,9 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 	
 	/**
 	 * 保存指令码和spring中的HandlerStore的对应关系
-	 * COMMAND_CODE_MATCH__HANDLER_STORE_MAP
+	 * command_code_match__handler_store_map
 	 */
-	private static Map<String, HandlerStore> COMMAND_CODE_MATCH_HANDLER_STORE_MAP = new HashMap<>(128);
+	private static Map<String, Store> COMMAND_CODE_MATCH_HANDLER_STORE_MAP = new HashMap<>(128);
 	
 	@Override
 	public void setHandler(MessageFrameHandler messageFrameHandler, String beanName) {
@@ -40,11 +41,11 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 				handlerStore.setBeanName(beanName);
 				handlerStore.setMethod(method);
 				handlerStore.setParameterNames(getParameterNames(method));
-				HandlerStore put = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.put(annotation.value(), handlerStore);
+				Store put = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.put(annotation.value(), handlerStore);
 				if (put != null) {
 					String methodName = method.getDeclaringClass().getName()+"."+method.getName();
 					String OtherMethodName = put.getMethod().getDeclaringClass().getName()+"."+put.getMethod().getName();
-					throw new RuntimeException(String.format("%s()和%s()指令码重复，指令码是：%s", methodName, OtherMethodName, annotation.value()));
+					throw new BeanCreationException(beanName, String.format("%s()和%s()指令码重复，指令码是：%s", methodName, OtherMethodName, annotation.value()));
 				}
 			}
 		}
@@ -68,7 +69,7 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 			} else if (ParameterName.MESSAGE_FRAME.getName().equals(parameterName)) {
 			} else if (ParameterName.MESSAGE.getName().equals(parameterName)) {
 			} else {
-				throw new RuntimeException(parameterName+"参数名不支持，参数名只支持ParameterName枚举类参数"+ParameterName.getAllName());
+				throw new BeanCreationException(String.format("%s参数名不支持，参数名只支持ParameterName枚举类参数%s", parameterName, ParameterName.getAllName()));
 			}
 		}
 	}
@@ -78,7 +79,7 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 		if (isEmpty(commandCode)) {
 			return null;
 		}
-		HandlerStore store = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.get(commandCode);
+		Store store = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.get(commandCode);
 		if (store == null) {
 			return null;
 		}
@@ -91,7 +92,7 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 		if (isEmpty(commandCode)) {
 			return null;
 		}
-		HandlerStore store = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.get(commandCode);
+		Store store = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.get(commandCode);
 		if (store == null) {
 			return null;
 		}
@@ -103,7 +104,7 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 		if (isEmpty(commandCode)) {
 			return null;
 		}
-		HandlerStore store = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.get(commandCode);
+		Store store = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.get(commandCode);
 		if (store == null) {
 			return null;
 		}
@@ -125,8 +126,12 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 		COMMAND_CODE_MATCH_HANDLER_STORE_MAP.clear();
 	}
 	
-	
-	class HandlerStore{
+	protected interface Store{
+		public String getBeanName();
+		public Method getMethod();
+		public String[] getParameterNames();
+	}
+	class HandlerStore implements Store{
 		private String beanName;
 		private Method method;
 		private String[] parameterNames;

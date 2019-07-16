@@ -19,7 +19,7 @@ public class GYMessageFrameHandler extends AbstractMessageFrameHandler implement
 	}
 	@CommandCode(value="4401")
 	public void heart(MessageFrame messageFrame, String message) {
-		System.out.println("4402..............");
+		System.out.println("4401..............");
 	}
 	@CommandCode(value="4403")
 	public void handler3(String deviceId) {
