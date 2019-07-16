@@ -57,7 +57,7 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 	protected String[] getParameterNames(Method method) {
 		ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
 		String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
-		checkMethodParameterNames(parameterNames);
+		checkMethodParameterNames(method, parameterNames);
 		return parameterNames;
 	}
 
@@ -66,14 +66,14 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 	 * 检查方法的参数名是否支持
 	 * @param parameterNames
 	 */
-	private void checkMethodParameterNames(String[] parameterNames) {
+	private void checkMethodParameterNames(Method method, String[] parameterNames) {
 		for (String parameterName : parameterNames) {
 			if (ParameterName.DEVICE_ID.getName().equals(parameterName)) {
 			} else if (ParameterName.MESSAGE_FRAME.getName().equals(parameterName)) {
 			} else if (ParameterName.MESSAGE.getName().equals(parameterName)) {
 			} else if (ParameterName.SYS_DATE.getName().equals(parameterName)) {
 			} else {
-				throw new BeanCreationException(String.format("%s参数名不支持，参数名只支持ParameterName枚举类参数%s", parameterName, ParameterName.getAllName()));
+				throw new BeanCreationException(String.format("[%s]()方法的[%s]参数名不支持，参数名只支持ParameterName枚举类参数%s", method.getName(), parameterName, ParameterName.getAllName()));
 			}
 		}
 	}
