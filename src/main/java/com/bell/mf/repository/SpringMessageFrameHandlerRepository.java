@@ -37,15 +37,18 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 		for (Method method : declaredMethods) {
 			CommandCode annotation = method.getAnnotation(CommandCode.class);
 			if (annotation != null) {
-				HandlerStore handlerStore = new HandlerStore();
-				handlerStore.setBeanName(beanName);
-				handlerStore.setMethod(method);
-				handlerStore.setParameterNames(getParameterNames(method));
-				Store put = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.put(annotation.value(), handlerStore);
-				if (put != null) {
-					String methodName = method.getDeclaringClass().getName()+"."+method.getName();
-					String OtherMethodName = put.getMethod().getDeclaringClass().getName()+"."+put.getMethod().getName();
-					throw new BeanCreationException(beanName, String.format("%s()和%s()指令码重复，指令码是：%s", methodName, OtherMethodName, annotation.value()));
+				String[] value = annotation.value();
+				for (String commandCode : value) {
+					HandlerStore handlerStore = new HandlerStore();
+					handlerStore.setBeanName(beanName);
+					handlerStore.setMethod(method);
+					handlerStore.setParameterNames(getParameterNames(method));
+					Store put = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.put(commandCode, handlerStore);
+					if (put != null) {
+						String methodName = method.getDeclaringClass().getName()+"."+method.getName();
+						String OtherMethodName = put.getMethod().getDeclaringClass().getName()+"."+put.getMethod().getName();
+						throw new BeanCreationException(beanName, String.format("%s()和%s()指令码重复，指令码是：%s", methodName, OtherMethodName, annotation.value()));
+					}
 				}
 			}
 		}
