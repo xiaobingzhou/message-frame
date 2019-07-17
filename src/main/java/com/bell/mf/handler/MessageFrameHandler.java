@@ -9,7 +9,9 @@ public interface MessageFrameHandler {
 	
 	/**
 	 * 处理消息帧的总入口
+	 * @param request
+	 * @throws MessageFrameHandlerException
 	 */
-	void handle(MessageFrameRequest request);
+	void handle(MessageFrameRequest request) throws MessageFrameHandlerException;
 	
 }

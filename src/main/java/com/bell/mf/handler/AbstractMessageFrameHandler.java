@@ -20,22 +20,21 @@ public abstract class AbstractMessageFrameHandler implements MessageFrameHandler
 
 	/**
 	 * 使用反射来调用指令码对应的处理方法
+	 * @param request
+	 * @throws MessageFrameHandlerException
 	 */
 	@Override
-	public void handle(MessageFrameRequest request) {
-		if (request == null) {
-			throw new RuntimeException("request 为空");
-		}
+	public void handle(MessageFrameRequest request) throws MessageFrameHandlerException{
 		MessageFrame messageFrame = request.getMessageFrame();
-		Method messageFrameHandlerMethod = getRepository().getHandlerMethod(messageFrame.getCommandCode());
-		if (messageFrameHandlerMethod == null) {
-			throw new RuntimeException("指令码：" + messageFrame.getCommandCode() + " 找不到解析方法！");
+		Method method = getRepository().getHandlerMethod(messageFrame.getCommandCode());
+		if (method == null) {
+			throw new MessageFrameHandlerException("指令码：" + messageFrame.getCommandCode() + " 找不到解析方法！");
 		}
 		try {
-			messageFrameHandlerMethod.invoke(this,
+			method.invoke(this,
 					getMethodArgs(request));
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new MessageFrameHandlerException(String.format("执行%s方法出错", method.getName()), e);
 		}
 	}
 
