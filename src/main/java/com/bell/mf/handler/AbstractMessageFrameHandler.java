@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.bell.mf.MessageFrame;
+import com.bell.mf.IMessageFrame;
 import com.bell.mf.repository.MessageFrameHandlerRepository;
 import com.bell.mf.repository.ParameterName;
 
@@ -25,10 +25,10 @@ public abstract class AbstractMessageFrameHandler implements MessageFrameHandler
 	 */
 	@Override
 	public void handle(MessageFrameRequest request) throws MessageFrameHandlerException{
-		MessageFrame messageFrame = request.getMessageFrame();
-		Method method = getRepository().getHandlerMethod(messageFrame.getCommandCode());
+		IMessageFrame iMessageFrame = request.getMessageFrame();
+		Method method = getRepository().getHandlerMethod(iMessageFrame.getCommandCode());
 		if (method == null) {
-			throw new MessageFrameHandlerException("指令码：" + messageFrame.getCommandCode() + " 找不到解析方法！");
+			throw new MessageFrameHandlerException("指令码：" + iMessageFrame.getCommandCode() + " 找不到解析方法！");
 		}
 		try {
 			method.invoke(this,

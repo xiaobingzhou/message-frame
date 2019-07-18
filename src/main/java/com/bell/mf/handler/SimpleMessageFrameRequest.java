@@ -3,7 +3,7 @@ package com.bell.mf.handler;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.bell.mf.MessageFrame;
+import com.bell.mf.IMessageFrame;
 
 public class SimpleMessageFrameRequest implements Serializable, MessageFrameRequest{
 	/**
@@ -12,7 +12,7 @@ public class SimpleMessageFrameRequest implements Serializable, MessageFrameRequ
 	private static final long serialVersionUID = 3358325538683680300L;
 	
 	private String deviceId;
-	private MessageFrame messageFrame;
+	private IMessageFrame iMessageFrame;
 	private String message;
 	private Date systemDate;
 	
@@ -22,11 +22,11 @@ public class SimpleMessageFrameRequest implements Serializable, MessageFrameRequ
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
 	}
-	public MessageFrame getMessageFrame() {
-		return messageFrame;
+	public IMessageFrame getMessageFrame() {
+		return iMessageFrame;
 	}
-	public void setMessageFrame(MessageFrame messageFrame) {
-		this.messageFrame = messageFrame;
+	public void setMessageFrame(IMessageFrame iMessageFrame) {
+		this.iMessageFrame = iMessageFrame;
 	}
 	public String getMessage() {
 		return message;

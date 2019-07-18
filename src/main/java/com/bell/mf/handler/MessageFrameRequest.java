@@ -2,7 +2,8 @@ package com.bell.mf.handler;
 
 import java.util.Date;
 
-import com.bell.mf.MessageFrame;
+import com.bell.mf.IMessageFrame;
+
 
 public interface MessageFrameRequest {
 
@@ -10,7 +11,7 @@ public interface MessageFrameRequest {
 	 *  解析过的消息帧
 	 * @return
 	 */
-	MessageFrame getMessageFrame();
+	IMessageFrame getMessageFrame();
 
 	/**
 	 * 设备uuid
