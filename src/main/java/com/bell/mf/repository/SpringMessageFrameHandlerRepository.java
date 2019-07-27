@@ -47,7 +47,7 @@ public class SpringMessageFrameHandlerRepository implements MessageFrameHandlerR
 					if (put != null) {
 						String methodName = method.getDeclaringClass().getName()+"."+method.getName();
 						String OtherMethodName = put.getMethod().getDeclaringClass().getName()+"."+put.getMethod().getName();
-						throw new BeanCreationException(beanName, String.format("%s()和%s()指令码重复，指令码是：%s", methodName, OtherMethodName, annotation.value()));
+						throw new BeanCreationException(beanName, String.format("%s()和%s()指令码重复，指令码是：%s", methodName, OtherMethodName, commandCode));
 					}
 				}
 			}
