@@ -27,13 +27,13 @@ public class AnnotationHandlerBeanPostProcessor implements BeanPostProcessor, Or
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-		if (bean instanceof com.bell.mf.handler.MessageFrameHandler) {
-			String msg = "["+beanName + "]使用了@MessageFrameHandler注解就不能够是MessageFrameHandler的实现类！";
-			logger.error(msg);
-			throw new FatalBeanException(msg);
-		}
 		MessageFrameHandler declaredAnnotation = bean.getClass().getDeclaredAnnotation(MessageFrameHandler.class);
 		if (declaredAnnotation != null) {
+			if (bean instanceof com.bell.mf.handler.MessageFrameHandler) {
+				String msg = "["+beanName + "]使用了@MessageFrameHandler注解就不能够是MessageFrameHandler的实现类！";
+				logger.error(msg);
+				throw new FatalBeanException(msg);
+			}
 			logger.info("AnnotationHandlerBeanPostProcessor ==> "+beanName);
 			repository.setHandler(bean, beanName);
 		}
