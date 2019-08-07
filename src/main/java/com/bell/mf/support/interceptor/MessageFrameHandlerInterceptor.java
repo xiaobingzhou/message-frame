@@ -1,4 +1,4 @@
-package com.bell.mf.support;
+package com.bell.mf.support.interceptor;
 
 import com.bell.mf.handler.MessageFrameRequest;
 

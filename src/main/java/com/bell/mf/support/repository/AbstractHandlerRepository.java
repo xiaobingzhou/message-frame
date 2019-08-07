@@ -1,4 +1,4 @@
-package com.bell.mf.support;
+package com.bell.mf.support.repository;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -21,8 +21,8 @@ import com.bell.mf.repository.ParameterName;
  * @author bell.zhouxiaobing
  * @since 1.3
  */
-public class AnnotationSpringMessageFrameHandlerRepository implements AnnotationMessageFrameHandlerRepository, ApplicationContextAware, DisposableBean{
-	
+public abstract class AbstractHandlerRepository implements HandlerRepository,  ApplicationContextAware, DisposableBean{
+
 	private ApplicationContext applicationContext;
 	
 	/**
@@ -33,10 +33,11 @@ public class AnnotationSpringMessageFrameHandlerRepository implements Annotation
 	
 	@Override
 	public void setHandler(Object messageFrameHandler, String beanName) {
-		storeCommandCodeWithMap(messageFrameHandler.getClass().getDeclaredMethods(), beanName);
+		storeCommandCodeWithMap(messageFrameHandler, beanName);
 	}
 
-	protected void storeCommandCodeWithMap(Method[] declaredMethods, String beanName) {
+	protected void storeCommandCodeWithMap(Object messageFrameHandler, String beanName) {
+		Method[] declaredMethods = messageFrameHandler.getClass().getDeclaredMethods();
 		for (Method method : declaredMethods) {
 			CommandCode annotation = method.getAnnotation(CommandCode.class);
 			if (annotation != null) {
@@ -84,7 +85,7 @@ public class AnnotationSpringMessageFrameHandlerRepository implements Annotation
 		if (isEmpty(commandCode)) {
 			return null;
 		}
-		Store store = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.get(commandCode);
+		Store store = getStore(commandCode);
 		if (store == null) {
 			return null;
 		}
@@ -96,7 +97,7 @@ public class AnnotationSpringMessageFrameHandlerRepository implements Annotation
 		if (isEmpty(commandCode)) {
 			return null;
 		}
-		Store store = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.get(commandCode);
+		Store store = getStore(commandCode);
 		if (store == null) {
 			return null;
 		}
@@ -108,11 +109,20 @@ public class AnnotationSpringMessageFrameHandlerRepository implements Annotation
 		if (isEmpty(commandCode)) {
 			return null;
 		}
-		Store store = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.get(commandCode);
+		Store store = getStore(commandCode);
 		if (store == null) {
 			return null;
 		}
 		return store.getParameterNames();
+	}
+
+	/**
+	 * @param commandCode
+	 * @return
+	 */
+	private Store getStore(String commandCode) {
+		Store store = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.get(commandCode);
+		return store;
 	}
 	
 	private boolean isEmpty(String commandCode) {
@@ -135,6 +145,7 @@ public class AnnotationSpringMessageFrameHandlerRepository implements Annotation
 		Method getMethod();
 		String[] getParameterNames();
 	}
+	
 	class HandlerStore implements Store{
 		private String beanName;
 		private Method method;
@@ -164,5 +175,5 @@ public class AnnotationSpringMessageFrameHandlerRepository implements Annotation
 		}
 		
 	}
-	
+
 }

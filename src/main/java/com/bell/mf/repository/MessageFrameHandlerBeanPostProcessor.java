@@ -15,7 +15,7 @@ import com.bell.mf.handler.MessageFrameHandler;
  * @author bell.zhouxiaobing
  *
  */
-@Component
+@Deprecated
 public class MessageFrameHandlerBeanPostProcessor implements BeanPostProcessor, Ordered{
 
 	private static Logger logger = LoggerFactory.getLogger(MessageFrameHandlerBeanPostProcessor.class);

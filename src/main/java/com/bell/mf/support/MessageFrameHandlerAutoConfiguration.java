@@ -3,6 +3,14 @@ package com.bell.mf.support;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.bell.mf.repository.MessageFrameHandlerRepository;
+import com.bell.mf.repository.SpringMessageFrameHandlerRepository;
+import com.bell.mf.support.interceptor.MessageFrameHandlerExecutionChain;
+import com.bell.mf.support.processor.HandlerBeanPostProcessor;
+import com.bell.mf.support.processor.InterceptorBeanPostProcessor;
+import com.bell.mf.support.repository.AnnotationSpringMessageFrameHandlerRepository;
+import com.bell.mf.support.repository.HandlerRepository;
+
 /**
  * 
  * @author bell.zhouxiaobing
@@ -12,23 +20,28 @@ import org.springframework.context.annotation.Configuration;
 public class MessageFrameHandlerAutoConfiguration {
 
 	@Bean
-	public DispatcherMessageFrameHandler dispatcherMessageFrameHandler() {
+	public Dispatcher dispatcher() {
 		DispatcherMessageFrameHandler dispatcherMessageFrameHandler = new DispatcherMessageFrameHandler();
 		dispatcherMessageFrameHandler.setHandlerExecutionChain(messageFrameHandlerExecutionChain());
-		dispatcherMessageFrameHandler.setAnnotationRepository(annotationmessageFrameHandlerRepository());
+		dispatcherMessageFrameHandler.setRepository(handlerRepository());
 		return dispatcherMessageFrameHandler;
 	}
 	
 	@Bean
-	public AnnotationHandlerBeanPostProcessor annotationHandlerBeanPostProcessor() {
-		AnnotationHandlerBeanPostProcessor beanPostProcessor = new AnnotationHandlerBeanPostProcessor();
-		beanPostProcessor.setRepository(annotationmessageFrameHandlerRepository());
+	public HandlerBeanPostProcessor handlerBeanPostProcessor() {
+		HandlerBeanPostProcessor beanPostProcessor = new HandlerBeanPostProcessor();
+		beanPostProcessor.setRepository(handlerRepository());
 		return beanPostProcessor;
 	}
 
 	@Bean
-	public AnnotationMessageFrameHandlerRepository annotationmessageFrameHandlerRepository() {
+	public HandlerRepository handlerRepository() {
 		return new AnnotationSpringMessageFrameHandlerRepository();
+	}
+	
+	@Bean
+	public MessageFrameHandlerRepository messageFrameHandlerRepository() {
+		return new SpringMessageFrameHandlerRepository();
 	}
 	
 	@Bean
@@ -42,7 +55,5 @@ public class MessageFrameHandlerAutoConfiguration {
 	public MessageFrameHandlerExecutionChain messageFrameHandlerExecutionChain() {
 		return new MessageFrameHandlerExecutionChain();
 	}
-	
-	
 	
 }

@@ -3,13 +3,14 @@ package com.bell.mf.repository;
 import java.lang.reflect.Method;
 
 import com.bell.mf.handler.MessageFrameHandler;
+import com.bell.mf.support.repository.HandlerRepository;
 
 /**
  * 保存消息帧处理器的仓库
  * @author bell.zhouxiaobing
  *
  */
-public interface MessageFrameHandlerRepository {
+public interface MessageFrameHandlerRepository extends HandlerRepository{
 	
 	/**
 	 * 设置消息帧处理器到仓库里

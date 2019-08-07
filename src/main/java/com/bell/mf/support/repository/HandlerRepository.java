@@ -1,14 +1,14 @@
-package com.bell.mf.support;
+package com.bell.mf.support.repository;
 
 import java.lang.reflect.Method;
 
 /**
- * 保存消息帧处理器的仓库
+ * 
  * @author bell.zhouxiaobing
  * @since 1.3
  */
-public interface AnnotationMessageFrameHandlerRepository {
-	
+public interface HandlerRepository {
+
 	/**
 	 * 设置消息帧处理器到仓库里
 	 * @param messageFrameHandler
@@ -38,4 +38,5 @@ public interface AnnotationMessageFrameHandlerRepository {
 	 */
 	String[] getHandlerMethodParameterNames(String commandCode);
 	
+
 }
