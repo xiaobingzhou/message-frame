@@ -102,9 +102,14 @@ public class MessageFrameDispather{
 
 ### 二、重构后
 
+#### 1、使用继承AbstractMessageFrameHandler抽象类（不推荐）
+
 ```java
 @Component
 public class MessageFrameDispather extends AbstractMessageFrameHandler{
+    
+    @Autowired
+    private MessageFrameHandlerRepository messageFrameHandlerRepository;
 	/**
 	 * 根据不同指令码调用不同的解析方法
 	 * 需要对多个if进行重构
@@ -138,7 +143,45 @@ public class MessageFrameDispather extends AbstractMessageFrameHandler{
 }
 ```
 
+#### 2、使用注解方式（推荐）
+
+```java
+@Component
+@MessageFrameHandler
+public class MessageFrameDispather{
+    
+    @Autowired
+	private Dispatcher dispatcher;
+    
+	/**
+	 * 根据不同指令码调用不同的解析方法
+	 * 需要对多个if进行重构
+	 */
+	public void analysis(String deviceId, MessageFrame frame, String message) {
+		// 重构后
+		SimpleMessageFrameRequest request = SimpleMessageFrameRequest.builder()
+				.deviceId(deviceId)
+				.messageFrame(messageFrame)
+				.message(message)
+				.systemDate(new Date())
+				.build();
+		try {
+			dispatcher.dispatch(request);
+		} catch (MessageFrameHandlerException e) {
+			logger.error("执行handle方法异常:"+e.getLocalizedMessage(), e);
+		}
+	}
+    @CommandCode(MessageFrame.WAKE_UP)
+    public void wakeUp(String deviceId, MessageFrame messageFrame) {
+    	// 业务逻辑....
+    }
+}
+```
+
+
+
 ## 使用方式
+
 ### 1、下载源码
 ```java
 git clone https://github.com/xiaobingzhou/message-frame.git
