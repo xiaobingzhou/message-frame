@@ -17,7 +17,10 @@ import com.bell.mf.annotation.CommandCode;
 import com.bell.mf.repository.ParameterName;
 
 /**
- * 
+ * 实现接口</br>
+ * {@link HandlerRepository}</br>
+ * {@link ApplicationContextAware}</br>
+ * {@link DisposableBean}</br>
  * @author bell.zhouxiaobing
  * @since 1.3
  */

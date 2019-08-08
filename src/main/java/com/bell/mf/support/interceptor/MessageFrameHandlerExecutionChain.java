@@ -1,7 +1,6 @@
 package com.bell.mf.support.interceptor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.bell.mf.handler.MessageFrameRequest;
 
 /**
- * 
+ * ExecutionChain接口实现
  * @author bell.zhouxiaobing
  * @since 1.3
  */

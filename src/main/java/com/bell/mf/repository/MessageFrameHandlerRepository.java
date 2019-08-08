@@ -8,7 +8,7 @@ import com.bell.mf.support.repository.HandlerRepository;
 /**
  * 保存消息帧处理器的仓库
  * @author bell.zhouxiaobing
- *
+ * @since 1.2
  */
 public interface MessageFrameHandlerRepository extends HandlerRepository{
 	

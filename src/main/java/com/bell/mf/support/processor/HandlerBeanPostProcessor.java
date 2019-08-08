@@ -11,7 +11,7 @@ import com.bell.mf.annotation.MessageFrameHandler;
 import com.bell.mf.support.repository.HandlerRepository;
 
 /**
- * 
+ * MessageFrameHandler注解或接口的后置处理器
  * @author bell.zhouxiaobing
  * @since 1.3
  */

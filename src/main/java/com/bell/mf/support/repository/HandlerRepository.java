@@ -3,7 +3,7 @@ package com.bell.mf.support.repository;
 import java.lang.reflect.Method;
 
 /**
- * 
+ * HandlerRepository接口
  * @author bell.zhouxiaobing
  * @since 1.3
  */

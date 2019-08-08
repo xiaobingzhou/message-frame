@@ -6,14 +6,13 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.Ordered;
-import org.springframework.stereotype.Component;
 
 import com.bell.mf.handler.MessageFrameHandler;
 
 /**
  * MessageFrameHandler后置处理器
  * @author bell.zhouxiaobing
- *
+ * @since 1.2
  */
 @Deprecated
 public class MessageFrameHandlerBeanPostProcessor implements BeanPostProcessor, Ordered{

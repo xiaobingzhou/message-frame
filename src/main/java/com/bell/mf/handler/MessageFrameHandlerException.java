@@ -1,5 +1,10 @@
 package com.bell.mf.handler;
 
+/**
+ * 定义MessageFrameHandlerException异常
+ * @author bell.zhouxiaobing
+ * @since 1.2
+ */
 public class MessageFrameHandlerException extends Exception{
 
 	/**

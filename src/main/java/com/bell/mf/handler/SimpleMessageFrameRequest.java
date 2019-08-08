@@ -8,6 +8,12 @@ import com.bell.mf.IMessageFrame;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * MessageFrameRequest接口的简单实现
+ * @author bell.zhouxiaobing
+ * @since 1.2
+ * @see MessageFrameRequest
+ */
 @Builder
 @Data
 public class SimpleMessageFrameRequest implements Serializable, MessageFrameRequest{

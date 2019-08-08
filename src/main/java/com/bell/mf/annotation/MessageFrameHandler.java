@@ -6,7 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Mark class is a MessageFrameHandler class
+ * Mark as a MessageFrameHandler class
+ * 标记为一个MessageFrameHandler类
  * @author bell.zhouxiaobing
  * @since 1.3
  *

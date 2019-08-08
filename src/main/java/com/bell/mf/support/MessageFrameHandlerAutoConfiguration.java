@@ -12,7 +12,7 @@ import com.bell.mf.support.repository.AnnotationSpringMessageFrameHandlerReposit
 import com.bell.mf.support.repository.HandlerRepository;
 
 /**
- * 
+ * MessageFrameHandlerAutoConfiguration自动配置类
  * @author bell.zhouxiaobing
  * @since 1.3
  */

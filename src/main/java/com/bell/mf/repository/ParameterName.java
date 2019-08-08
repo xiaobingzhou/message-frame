@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 支持的参数名
  * @author bell.zhouxiaobing
- *
+ * @since 1.2
  */
 public enum ParameterName {
 	DEVICE_ID("deviceId"), MESSAGE_FRAME("messageFrame"), MESSAGE("message"), SYS_DATE("sysDate");

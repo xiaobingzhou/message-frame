@@ -8,7 +8,6 @@ import com.bell.mf.support.repository.HandlerRepository;
 
 /**
  * MessageFrameHandler调度器
- * 
  * @author bell.zhouxiaobing
  * @since 1.3
  */

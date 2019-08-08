@@ -3,7 +3,7 @@ package com.bell.mf.handler;
 /**
  * 定义消息帧处理器接口
  * @author bell.zhouxiaobing
- *
+ * @since 1.2
  */
 public interface MessageFrameHandler {
 	

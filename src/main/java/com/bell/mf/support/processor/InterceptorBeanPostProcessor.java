@@ -10,7 +10,7 @@ import com.bell.mf.support.interceptor.MessageFrameHandlerExecutionChain;
 import com.bell.mf.support.interceptor.MessageFrameHandlerInterceptor;
 
 /**
- * 
+ * 方法拦截器后置处理器
  * @author bell.zhouxiaobing
  * @since 1.3
  */

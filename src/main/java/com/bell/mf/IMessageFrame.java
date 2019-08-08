@@ -3,7 +3,7 @@ package com.bell.mf;
 /**
  * 报文帧格式
  * @author bell.zhouxiaobing
- *
+ * @since 1.2
  */
 public interface IMessageFrame {
 	//  帧头	       协议版本号  报文序列号	地址信息	 指令码	  帧源              消息体	CRC校验	   帧尾
