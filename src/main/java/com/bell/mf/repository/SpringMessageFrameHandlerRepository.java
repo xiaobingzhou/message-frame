@@ -18,7 +18,11 @@ public class SpringMessageFrameHandlerRepository extends AbstractHandlerReposito
 
 	@Override
 	public MessageFrameHandler getHandler(String commandCode) {
-		return (MessageFrameHandler)super.getHandler(commandCode);
+		Object handler = super.getHandler(commandCode);
+		if (handler instanceof MessageFrameHandler) {
+			return (MessageFrameHandler)handler;
+		}
+		return null;
 	}
 	
 }
