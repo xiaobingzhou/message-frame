@@ -3,7 +3,14 @@ package com.bell.mf.mapper;
 import java.util.Calendar;
 import java.util.Date;
 
-public enum MapperFieldPostHandlerEnum {
+/**
+ * @ClassName MapperFieldEnum
+ * @Description 字段后置处理类枚举
+ * @author bell.zhouxiaobing
+ * @date 2019年11月28日
+ * @since 1.4.0
+ */
+public enum MapperFieldEnum {
 	/** 什么也不处理 */
 	original((v, r) -> v),
 	/** 16进制转2进制字符串 */
@@ -15,17 +22,17 @@ public enum MapperFieldPostHandlerEnum {
 	/** 解析为Date对象 */
 	datetime(datetimePostHandler());
 
-	private MapperFieldPostHandler postHandler;
+	private MapperFieldHandler postHandler;
 
-	private MapperFieldPostHandlerEnum(MapperFieldPostHandler postHandler) {
+	private MapperFieldEnum(MapperFieldHandler postHandler) {
 		this.postHandler = postHandler;
 	}
 
-	public MapperFieldPostHandler getPostHandler() {
+	public MapperFieldHandler getPostHandler() {
 		return this.postHandler;
 	}
 
-	private static MapperFieldPostHandler datetimePostHandler() {
+	private static MapperFieldHandler datetimePostHandler() {
 		return (value, r) -> {
 			int year = Integer.valueOf(value.substring(0, 2), 16) + 2000;// 18年
 			int month = Integer.valueOf(value.substring(2, 4), 16) - 1;

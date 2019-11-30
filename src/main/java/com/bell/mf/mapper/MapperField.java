@@ -16,6 +16,6 @@ public class MapperField {
 	
 	private int length;
 	private String name;
-	private MapperFieldPostHandler postHandler;
+	private MapperFieldHandler postHandler;
 	
 }

@@ -1,7 +1,7 @@
 package com.bell.mf.mapper;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.util.StringUtils;
@@ -27,20 +27,27 @@ public class Mapper {
 	 * @throws InstantiationException 
 	 */
 	public static <T> T mapper(final String body, Class<T> targetClass) throws InstantiationException, IllegalAccessException {
-		List<MapperField> bodyFields = new ArrayList<>();
+		// init size
+		MapperField[] bodyFields = new MapperField[targetClass.getDeclaredFields().length];
+		// 遍历所有字段，判断是否有标注@MapperField注解
 		for (Field field : targetClass.getDeclaredFields()) {
 			com.bell.mf.annotation.MapperField annotation = field.getAnnotation(com.bell.mf.annotation.MapperField.class);
 			if (annotation != null) {
 				MapperField mapperField = MapperField.builder().length(annotation.length())
 						.name(field.getName()).postHandler(getPostHandler(annotation)).build();
-				bodyFields.add(annotation.index(), mapperField);
+				if (bodyFields[annotation.index()] != null) {
+					throw new RuntimeException(String.format("[%s#%s] @MapperField index [%s] duplicate", targetClass.getName(), field.getName(), annotation.index()));
+				}
+				bodyFields[annotation.index()] = mapperField;
 			}
 		}
-		return JSON.parseObject(mapper(body, bodyFields).toJSONString(), targetClass);
+		JSONObject mapper = mapper(body, Arrays.asList(bodyFields));
+		if (mapper == null) { return null; }
+		return JSON.parseObject(mapper.toJSONString(), targetClass);
 	}
 	
-	private static MapperFieldPostHandler getPostHandler(com.bell.mf.annotation.MapperField annotation) throws InstantiationException, IllegalAccessException {
-		if (annotation.postHandle() == MapperFieldPostHandler.class) {
+	private static MapperFieldHandler getPostHandler(com.bell.mf.annotation.MapperField annotation) throws InstantiationException, IllegalAccessException {
+		if (annotation.postHandle() == MapperFieldHandler.class) {
 			return annotation.anonymousMethod().getPostHandler();
 		}
 		return annotation.postHandle().newInstance();
@@ -67,7 +74,7 @@ public class Mapper {
 		// postHandle
 		for (int i = 0; i < list.size(); i++) {
 			MapperField field = list.get(i);
-			MapperFieldPostHandler handler = field.getPostHandler();
+			MapperFieldHandler handler = field.getPostHandler();
 			if (handler != null) {
 				String key = field.getName();
 				String val = (String) result.get(key);

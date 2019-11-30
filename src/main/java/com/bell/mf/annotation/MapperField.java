@@ -6,9 +6,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.bell.mf.mapper.MapperFieldPostHandler;
-import com.bell.mf.mapper.MapperFieldPostHandlerEnum;
+import com.bell.mf.mapper.MapperFieldHandler;
+import com.bell.mf.mapper.MapperFieldEnum;
 
+/**
+ * @ClassName MapperFieldEnum
+ * @Description 映射字段注解
+ * @author bell.zhouxiaobing
+ * @date 2019年11月28日
+ * @since 1.4.0
+ * 
+ */
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -31,13 +39,13 @@ public @interface MapperField {
 	 * 如果该字段为默认值，则调用innerMethod枚举中你的匿名后置处理类
 	 * @return
 	 */
-	Class<? extends MapperFieldPostHandler> postHandle() default MapperFieldPostHandler.class;
+	Class<? extends MapperFieldHandler> postHandle() default MapperFieldHandler.class;
 	
 	/**
-	 * @Description 该字段的后置处理方法枚举，MapperFieldPostHandlerEnum返回后置处理类
-	 * 如果postHandle值为MapperFieldPostHandler，即调用PostHandlerEnum的getPostHandler获取后置处理类
+	 * @Description 该字段的后置处理方法枚举，MapperFieldEnum返回后置处理类
+	 * 如果postHandle值为MapperFieldHandler，即调用MapperFieldEnum的getPostHandler获取后置处理类
 	 * @return
 	 */
-	MapperFieldPostHandlerEnum anonymousMethod() default MapperFieldPostHandlerEnum.original;
+	MapperFieldEnum anonymousMethod() default MapperFieldEnum.original;
 	
 }
