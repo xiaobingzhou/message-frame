@@ -1,5 +1,19 @@
 # message-frame
 
+### Maven 引用方式
+
+注意：项目开始版本为：1.5.0.RELEASE
+
+```xml
+<dependency>	
+	<groupId>com.github.xiaobingzhou</groupId>
+    <artifactId>message-frame</artifactId>
+    <version>1.5.0.RELEASE</version>
+</dependency>
+```
+
+
+
 ### 一、重构前
 
 ```java
