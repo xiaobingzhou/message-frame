@@ -6,7 +6,7 @@
 
 ```xml
 <dependency>	
-	<groupId>com.github.xiaobingzhou</groupId>
+    <groupId>com.github.xiaobingzhou</groupId>
     <artifactId>message-frame</artifactId>
     <version>1.5.0.RELEASE</version>
 </dependency>
