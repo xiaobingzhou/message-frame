@@ -2,7 +2,7 @@
 
 ### Maven 引用方式
 
-注意：项目开始版本为：1.5.0.RELEASE
+注意：项目从1.5.0.RELEASE才发布到maven中央仓库
 
 ```xml
 <dependency>	
