@@ -23,13 +23,11 @@ public class MessageFrameHandlerExecutionChain implements ExecutionChain {
 
     /**
      * 指令码对应的拦截器
-     * @since 1.5.2
      */
 	private Map<String, List<MessageFrameHandlerInterceptor>> commandCodeInterceptorsMap = new HashMap<>();
 
     /**
      * 添加指令码拦截器
-     * @since 1.5.2
      */
     public boolean addCommandCodeInterceptor(MessageFrameHandlerInterceptor interceptor, CommandCode commandCode) {
         Arrays.stream(commandCode.value()).forEach(c -> {
