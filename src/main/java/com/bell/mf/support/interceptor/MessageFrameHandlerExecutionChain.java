@@ -65,14 +65,16 @@ public class MessageFrameHandlerExecutionChain implements ExecutionChain {
     }
 
     public void applyPreHandle(MessageFrameRequest request) {
+        // 指令码拦截器-前置处理
+        for (MessageFrameHandlerInterceptor interceptor : commandCodeInterceptors(request)) {
+            preHandle(request, interceptor);
+        }
+
         // 全局拦截器-前置处理
 		for (MessageFrameHandlerInterceptor interceptor : interceptors) {
             preHandle(request, interceptor);
         }
-		// 指令码拦截器-前置处理
-        for (MessageFrameHandlerInterceptor interceptor : commandCodeInterceptors(request)) {
-            preHandle(request, interceptor);
-        }
+
 	}
 
     private void preHandle(MessageFrameRequest request, MessageFrameHandlerInterceptor interceptor) {
@@ -82,14 +84,16 @@ public class MessageFrameHandlerExecutionChain implements ExecutionChain {
     }
 
     public void applyPostHandle(MessageFrameRequest request) {
-        // 全局拦截器-后置处理
-		for (MessageFrameHandlerInterceptor interceptor : interceptors) {
-            postHandle(request, interceptor);
-        }
         // 指令码拦截器-后置处理
         for (MessageFrameHandlerInterceptor interceptor : commandCodeInterceptors(request)) {
             postHandle(request, interceptor);
         }
+
+        // 全局拦截器-后置处理
+		for (MessageFrameHandlerInterceptor interceptor : interceptors) {
+            postHandle(request, interceptor);
+        }
+
     }
 
     private void postHandle(MessageFrameRequest request, MessageFrameHandlerInterceptor interceptor) {
