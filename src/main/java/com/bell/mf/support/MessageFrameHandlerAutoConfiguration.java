@@ -1,5 +1,7 @@
 package com.bell.mf.support;
 
+import com.bell.mf.support.interceptor.ExecutionChain;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,13 +24,25 @@ public class MessageFrameHandlerAutoConfiguration {
 	@Bean
 	public Dispatcher dispatcher() {
 		DispatcherMessageFrameHandler dispatcherMessageFrameHandler = new DispatcherMessageFrameHandler();
-		dispatcherMessageFrameHandler.setHandlerExecutionChain(messageFrameHandlerExecutionChain());
+		dispatcherMessageFrameHandler.setExecutionChain(executionChain());
 		dispatcherMessageFrameHandler.setRepository(handlerRepository());
 		return dispatcherMessageFrameHandler;
 	}
-	
+
 	@Bean
-	public HandlerBeanPostProcessor handlerBeanPostProcessor() {
+	public ExecutionChain executionChain() {
+		return new MessageFrameHandlerExecutionChain();
+	}
+
+	@Bean
+	public BeanPostProcessor interceptorBeanPostProcessor() {
+		InterceptorBeanPostProcessor interceptorBeanPostProcessor = new InterceptorBeanPostProcessor();
+		interceptorBeanPostProcessor.setExecutionChain(executionChain());
+		return interceptorBeanPostProcessor;
+	}
+
+	@Bean
+	public BeanPostProcessor handlerBeanPostProcessor() {
 		HandlerBeanPostProcessor beanPostProcessor = new HandlerBeanPostProcessor();
 		beanPostProcessor.setRepository(handlerRepository());
 		return beanPostProcessor;
@@ -43,17 +57,6 @@ public class MessageFrameHandlerAutoConfiguration {
 	public MessageFrameHandlerRepository messageFrameHandlerRepository() {
 		return new SpringMessageFrameHandlerRepository();
 	}
-	
-	@Bean
-	public InterceptorBeanPostProcessor interceptorBeanPostProcessor() {
-		InterceptorBeanPostProcessor interceptorBeanPostProcessor = new InterceptorBeanPostProcessor();
-		interceptorBeanPostProcessor.setHandlerExecutionChain(messageFrameHandlerExecutionChain());
-		return interceptorBeanPostProcessor;
-	}
 
-	@Bean
-	public MessageFrameHandlerExecutionChain messageFrameHandlerExecutionChain() {
-		return new MessageFrameHandlerExecutionChain();
-	}
 	
 }

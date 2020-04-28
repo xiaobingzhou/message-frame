@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * @author bell.zhouxiaobing
  * @since 1.2
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CommandCode {
 

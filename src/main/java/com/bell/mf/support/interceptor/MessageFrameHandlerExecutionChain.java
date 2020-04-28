@@ -1,61 +1,116 @@
 package com.bell.mf.support.interceptor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import com.bell.mf.annotation.CommandCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bell.mf.handler.MessageFrameRequest;
 import org.springframework.core.OrderComparator;
+import org.springframework.core.annotation.AnnotationUtils;
 
 /**
  * ExecutionChain接口实现
  * @author bell.zhouxiaobing
  * @since 1.3
  */
-public class MessageFrameHandlerExecutionChain implements ExecutionChain{
+public class MessageFrameHandlerExecutionChain implements ExecutionChain {
 
 	private static final Logger logger = LoggerFactory.getLogger(MessageFrameHandlerExecutionChain.class);
 
-	private List<MessageFrameHandlerInterceptor> interceptors = new ArrayList<MessageFrameHandlerInterceptor>();
+	private List<MessageFrameHandlerInterceptor> interceptors = new ArrayList<>();
 
-	public boolean addInterceptor(MessageFrameHandlerInterceptor interceptor) {
+    /**
+     * 指令码对应的拦截器
+     * @since 1.5.2
+     */
+	private Map<String, List<MessageFrameHandlerInterceptor>> commandCodeInterceptorsMap = new HashMap<>();
+
+    /**
+     * 添加指令码拦截器
+     * @since 1.5.2
+     */
+    public boolean addCommandCodeInterceptor(MessageFrameHandlerInterceptor interceptor, CommandCode commandCode) {
+        Arrays.stream(commandCode.value()).forEach(c -> {
+            List<MessageFrameHandlerInterceptor> list = commandCodeInterceptorsMap.get(c);
+            if (list == null) {
+                list = new ArrayList<>();
+            }
+            list.add(interceptor);
+            OrderComparator.sort(list);// 排序
+            commandCodeInterceptorsMap.put(c, list);
+        });
+        return true;
+    }
+
+    public boolean addInterceptor(MessageFrameHandlerInterceptor interceptor) {
 		if (interceptor == null) {
 			logger.info("interceptor is null!");
 			return false;
 		}
-		boolean add = this.interceptors.add(interceptor);
-		OrderComparator.sort(interceptors);// 排序
-		return add;
-	}
-	
-	public void applyPreHandle(MessageFrameRequest request) {
-		for (MessageFrameHandlerInterceptor messageFrameHandlerInterceptor : interceptors) {
-			if (messageFrameHandlerInterceptor.support(request)) {
-				messageFrameHandlerInterceptor.preHandle(request);
-			}
-		}
-	}
-	public void applyPostHandle(MessageFrameRequest request) {
-		for (MessageFrameHandlerInterceptor messageFrameHandlerInterceptor : interceptors) {
-			if (messageFrameHandlerInterceptor.support(request)) {
-				messageFrameHandlerInterceptor.postHandle(request);
-			}
-		}
+		// 是否有CommandCode注解标注
+        CommandCode commandCode = getAnnotation(interceptor);
+		if (Objects.isNull(commandCode)) {
+            boolean add = this.interceptors.add(interceptor);
+            OrderComparator.sort(interceptors);// 排序
+            return add;
+        }
+		// 指令码拦截器
+		return addCommandCodeInterceptor(interceptor, commandCode);
 	}
 
-	@Override
-	public String toString() {
-		return "MessageFrameHandlerExecutionChain [interceptors=" + interceptors + "]";
+    private CommandCode getAnnotation(MessageFrameHandlerInterceptor interceptor) {
+        return AnnotationUtils.findAnnotation(interceptor.getClass(), CommandCode.class);
+    }
+
+    public void applyPreHandle(MessageFrameRequest request) {
+        // 全局拦截器-前置处理
+		for (MessageFrameHandlerInterceptor interceptor : interceptors) {
+            preHandle(request, interceptor);
+        }
+		// 指令码拦截器-前置处理
+        for (MessageFrameHandlerInterceptor interceptor : commandCodeInterceptors(request)) {
+            preHandle(request, interceptor);
+        }
 	}
 
-	public List<MessageFrameHandlerInterceptor> getInterceptors() {
-		return interceptors;
-	}
-	
-	public void setInterceptors(List<MessageFrameHandlerInterceptor> interceptors) {
-		this.interceptors = interceptors;
-	}
-	
+    private void preHandle(MessageFrameRequest request, MessageFrameHandlerInterceptor interceptor) {
+        if (interceptor.support(request)) {
+            interceptor.preHandle(request);
+        }
+    }
+
+    public void applyPostHandle(MessageFrameRequest request) {
+        // 全局拦截器-后置处理
+		for (MessageFrameHandlerInterceptor interceptor : interceptors) {
+            postHandle(request, interceptor);
+        }
+        // 指令码拦截器-后置处理
+        for (MessageFrameHandlerInterceptor interceptor : commandCodeInterceptors(request)) {
+            postHandle(request, interceptor);
+        }
+    }
+
+    private void postHandle(MessageFrameRequest request, MessageFrameHandlerInterceptor interceptor) {
+        if (interceptor.support(request)) {
+            interceptor.postHandle(request);
+        }
+    }
+
+    private List<MessageFrameHandlerInterceptor> commandCodeInterceptors(MessageFrameRequest request) {
+        String commandCode = request.getMessageFrame().getCommandCode();
+        List<MessageFrameHandlerInterceptor> list = commandCodeInterceptorsMap.get(commandCode);
+        return Objects.isNull(list) ? Collections.emptyList() : list;
+    }
+
+    @Override
+    public List<MessageFrameHandlerInterceptor> getInterceptors() {
+        return interceptors;
+    }
+
+    @Override
+    public List<MessageFrameHandlerInterceptor> getCommandCodeInterceptors(String commandCode) {
+        return commandCodeInterceptorsMap.get(commandCode);
+    }
 }

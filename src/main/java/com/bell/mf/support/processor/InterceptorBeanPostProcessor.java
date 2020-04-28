@@ -1,12 +1,12 @@
 package com.bell.mf.support.processor;
 
+import com.bell.mf.support.interceptor.ExecutionChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.Ordered;
 
-import com.bell.mf.support.interceptor.MessageFrameHandlerExecutionChain;
 import com.bell.mf.support.interceptor.MessageFrameHandlerInterceptor;
 
 /**
@@ -17,9 +17,9 @@ import com.bell.mf.support.interceptor.MessageFrameHandlerInterceptor;
 public class InterceptorBeanPostProcessor implements BeanPostProcessor, Ordered{
 
 	private static Logger logger = LoggerFactory.getLogger(InterceptorBeanPostProcessor.class);
-	
-	private MessageFrameHandlerExecutionChain messageFrameHandlerExecutionChain;
-	
+
+	private ExecutionChain executionChain;
+
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		return bean;
@@ -29,7 +29,7 @@ public class InterceptorBeanPostProcessor implements BeanPostProcessor, Ordered{
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		if (bean instanceof MessageFrameHandlerInterceptor) {
 			logger.info("InterceptorBeanPostProcessor ==> "+beanName);
-			messageFrameHandlerExecutionChain.addInterceptor((MessageFrameHandlerInterceptor)bean);
+			getExecutionChain().addInterceptor((MessageFrameHandlerInterceptor)bean);
 		}
 		return bean;
 	}
@@ -39,11 +39,11 @@ public class InterceptorBeanPostProcessor implements BeanPostProcessor, Ordered{
 		return Ordered.HIGHEST_PRECEDENCE;
 	}
 
-	public MessageFrameHandlerExecutionChain getHandlerExecutionChain() {
-		return messageFrameHandlerExecutionChain;
+	public ExecutionChain getExecutionChain() {
+		return executionChain;
 	}
 
-	public void setHandlerExecutionChain(MessageFrameHandlerExecutionChain messageFrameHandlerExecutionChain) {
-		this.messageFrameHandlerExecutionChain = messageFrameHandlerExecutionChain;
+	public void setExecutionChain(ExecutionChain executionChain) {
+		this.executionChain = executionChain;
 	}
 }

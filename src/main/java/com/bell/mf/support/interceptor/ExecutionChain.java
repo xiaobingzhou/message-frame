@@ -10,9 +10,13 @@ import com.bell.mf.handler.MessageFrameRequest;
  * @since 1.3
  */
 public interface ExecutionChain {
-	
+
+	// 全局拦截器
 	List<MessageFrameHandlerInterceptor> getInterceptors();
-	
+
+	// 指令码拦截器
+	List<MessageFrameHandlerInterceptor> getCommandCodeInterceptors(String commandCode);
+
 	boolean addInterceptor(MessageFrameHandlerInterceptor interceptor);
 	
 	void applyPreHandle(MessageFrameRequest request);

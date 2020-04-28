@@ -3,7 +3,7 @@ package com.bell.mf.support;
 import com.bell.mf.handler.MessageFrameHandlerException;
 import com.bell.mf.handler.MessageFrameRequest;
 import com.bell.mf.support.handler.AbstractHandler;
-import com.bell.mf.support.interceptor.MessageFrameHandlerExecutionChain;
+import com.bell.mf.support.interceptor.ExecutionChain;
 import com.bell.mf.support.repository.HandlerRepository;
 
 /**
@@ -15,24 +15,24 @@ public class DispatcherMessageFrameHandler extends AbstractHandler implements Di
 
 	private HandlerRepository repository;
 	
-	private MessageFrameHandlerExecutionChain handlerExecutionChain;
+	private ExecutionChain executionChain;
 
 	@Override
 	public void dispatch(MessageFrameRequest request) throws MessageFrameHandlerException {
 		// 执行前
-		getHandlerExecutionChain().applyPreHandle(request);
+		getExecutionChain().applyPreHandle(request);
 		// 执行处理
 		doHandle(request);
 		// 执行后
-		getHandlerExecutionChain().applyPostHandle(request);
+		getExecutionChain().applyPostHandle(request);
 	}
 
-	public MessageFrameHandlerExecutionChain getHandlerExecutionChain() {
-		return handlerExecutionChain;
+	public ExecutionChain getExecutionChain() {
+		return executionChain;
 	}
 
-	public void setHandlerExecutionChain(MessageFrameHandlerExecutionChain handlerExecutionChain) {
-		this.handlerExecutionChain = handlerExecutionChain;
+	public void setExecutionChain(ExecutionChain executionChain) {
+		this.executionChain = executionChain;
 	}
 
 	public HandlerRepository getRepository() {
