@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.bell.mf.handler.MessageFrameRequest;
 import org.springframework.core.OrderComparator;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.annotation.AnnotationUtils;
 
 /**
@@ -36,7 +37,7 @@ public class MessageFrameHandlerExecutionChain implements ExecutionChain {
                 list = new ArrayList<>();
             }
             list.add(interceptor);
-            OrderComparator.sort(list);// 排序
+            AnnotationAwareOrderComparator.sort(list);// 排序
             commandCodeInterceptorsMap.put(c, list);
         });
         return true;
@@ -51,7 +52,7 @@ public class MessageFrameHandlerExecutionChain implements ExecutionChain {
         CommandCode commandCode = getAnnotation(interceptor);
 		if (Objects.isNull(commandCode)) {
             boolean add = this.interceptors.add(interceptor);
-            OrderComparator.sort(interceptors);// 排序
+            AnnotationAwareOrderComparator.sort(interceptors);// 排序
             return add;
         }
 		// 指令码拦截器
