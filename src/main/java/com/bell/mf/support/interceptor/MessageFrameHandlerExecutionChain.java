@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bell.mf.handler.MessageFrameRequest;
+import org.springframework.core.OrderComparator;
 
 /**
  * ExecutionChain接口实现
@@ -24,17 +25,23 @@ public class MessageFrameHandlerExecutionChain implements ExecutionChain{
 			logger.info("interceptor is null!");
 			return false;
 		}
-		return this.interceptors.add(interceptor);
+		boolean add = this.interceptors.add(interceptor);
+		OrderComparator.sort(interceptors);// 排序
+		return add;
 	}
 	
 	public void applyPreHandle(MessageFrameRequest request) {
 		for (MessageFrameHandlerInterceptor messageFrameHandlerInterceptor : interceptors) {
-			messageFrameHandlerInterceptor.preHandle(request);
+			if (messageFrameHandlerInterceptor.support(request)) {
+				messageFrameHandlerInterceptor.preHandle(request);
+			}
 		}
 	}
 	public void applyPostHandle(MessageFrameRequest request) {
 		for (MessageFrameHandlerInterceptor messageFrameHandlerInterceptor : interceptors) {
-			messageFrameHandlerInterceptor.postHandle(request);
+			if (messageFrameHandlerInterceptor.support(request)) {
+				messageFrameHandlerInterceptor.postHandle(request);
+			}
 		}
 	}
 
