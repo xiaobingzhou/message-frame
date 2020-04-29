@@ -1,6 +1,6 @@
 package com.bell.mf.support;
 
-import com.bell.mf.support.bind.BindParam;
+import com.bell.mf.bind.BindParam;
 import com.bell.mf.support.interceptor.ExecutionChain;
 import com.bell.mf.support.interceptor.MessageFrameHandlerInterceptor;
 import com.bell.mf.support.repository.BindParamRepository;

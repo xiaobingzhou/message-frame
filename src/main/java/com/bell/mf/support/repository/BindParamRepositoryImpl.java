@@ -1,6 +1,6 @@
 package com.bell.mf.support.repository;
 
-import com.bell.mf.support.bind.BindParam;
+import com.bell.mf.bind.BindParam;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 
 import java.util.ArrayList;

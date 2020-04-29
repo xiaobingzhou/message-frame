@@ -1,4 +1,4 @@
-package com.bell.mf.support.bind;
+package com.bell.mf.bind;
 
 import com.bell.mf.handler.MessageFrameRequest;
 

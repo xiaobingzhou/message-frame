@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bell.mf.handler.MessageFrameRequest;
 import com.bell.mf.mapper.Mapper;
 import com.bell.mf.mapper.MapperField;
-import com.bell.mf.support.bind.BindParam;
+import com.bell.mf.bind.BindParam;
 import com.bell.mf.support.codec.BodyCodec;
 import com.bell.mf.support.repository.BindParamRepository;
 import com.bell.mf.support.repository.BodyCodecRepository;

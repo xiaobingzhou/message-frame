@@ -1,9 +1,9 @@
-package com.bell.mf.support.bind.impl;
+package com.bell.mf.bind.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bell.mf.handler.MessageFrameRequest;
 import com.bell.mf.repository.ParameterName;
-import com.bell.mf.support.bind.BindParam;
+import com.bell.mf.bind.BindParam;
 
 public class BodyJsonBindParam implements BindParam<JSONObject> {
     @Override

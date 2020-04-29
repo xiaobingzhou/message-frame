@@ -1,6 +1,6 @@
 package com.bell.mf.support.repository;
 
-import com.bell.mf.support.bind.BindParam;
+import com.bell.mf.bind.BindParam;
 
 import java.util.List;
 

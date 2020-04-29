@@ -1,7 +1,7 @@
 package com.bell.mf.support;
 
-import com.bell.mf.support.bind.BindParam;
-import com.bell.mf.support.bind.impl.*;
+import com.bell.mf.bind.BindParam;
+import com.bell.mf.bind.impl.*;
 import com.bell.mf.support.interceptor.ExecutionChain;
 import com.bell.mf.support.processor.BindParamBeanPostProcessor;
 import com.bell.mf.support.processor.BodyCodecBeanPostProcessor;
