@@ -51,11 +51,11 @@ public class MessageFrameHandlerExecutionChain implements ExecutionChain {
 		// 是否有CommandCode注解标注
         CommandCode commandCode = getAnnotation(interceptor);
 		if (Objects.isNull(commandCode)) {
-            boolean add = this.interceptors.add(interceptor);
+            boolean add = this.interceptors.add(interceptor);// 全局拦截器
             AnnotationAwareOrderComparator.sort(interceptors);// 排序
             return add;
         }
-		// 指令码拦截器
+        // 指令码拦截器
 		return addCommandCodeInterceptor(interceptor, commandCode);
 	}
 
@@ -64,13 +64,13 @@ public class MessageFrameHandlerExecutionChain implements ExecutionChain {
     }
 
     public void applyPreHandle(MessageFrameRequest request) {
-        // 指令码拦截器-前置处理
-        for (MessageFrameHandlerInterceptor interceptor : commandCodeInterceptors(request)) {
+        // 全局拦截器-前置处理
+		for (MessageFrameHandlerInterceptor interceptor : interceptors) {
             preHandle(request, interceptor);
         }
 
-        // 全局拦截器-前置处理
-		for (MessageFrameHandlerInterceptor interceptor : interceptors) {
+        // 指令码拦截器-前置处理
+        for (MessageFrameHandlerInterceptor interceptor : commandCodeInterceptors(request)) {
             preHandle(request, interceptor);
         }
 
@@ -83,13 +83,13 @@ public class MessageFrameHandlerExecutionChain implements ExecutionChain {
     }
 
     public void applyPostHandle(MessageFrameRequest request) {
-        // 指令码拦截器-后置处理
-        for (MessageFrameHandlerInterceptor interceptor : commandCodeInterceptors(request)) {
+        // 全局拦截器-后置处理
+		for (MessageFrameHandlerInterceptor interceptor : interceptors) {
             postHandle(request, interceptor);
         }
 
-        // 全局拦截器-后置处理
-		for (MessageFrameHandlerInterceptor interceptor : interceptors) {
+        // 指令码拦截器-后置处理
+        for (MessageFrameHandlerInterceptor interceptor : commandCodeInterceptors(request)) {
             postHandle(request, interceptor);
         }
 

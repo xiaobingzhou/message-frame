@@ -1,6 +1,9 @@
 package com.bell.mf.support;
 
 import com.bell.mf.support.interceptor.ExecutionChain;
+import com.bell.mf.support.processor.BodyCodecBeanPostProcessor;
+import com.bell.mf.support.repository.BodyCodecRepository;
+import com.bell.mf.support.repository.BodyCodecRepositoryImpl;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,10 +26,11 @@ public class MessageFrameHandlerAutoConfiguration {
 
 	@Bean
 	public Dispatcher dispatcher() {
-		DispatcherMessageFrameHandler dispatcherMessageFrameHandler = new DispatcherMessageFrameHandler();
-		dispatcherMessageFrameHandler.setExecutionChain(executionChain());
-		dispatcherMessageFrameHandler.setRepository(handlerRepository());
-		return dispatcherMessageFrameHandler;
+		DispatcherHandlerEnhanceMethodParam dispatcher = new DispatcherHandlerEnhanceMethodParam();
+		dispatcher.setExecutionChain(executionChain());
+		dispatcher.setRepository(handlerRepository());
+		dispatcher.setBodyCodecRepository(bodyCodecRepository());
+		return dispatcher;
 	}
 
 	@Bean
@@ -46,6 +50,18 @@ public class MessageFrameHandlerAutoConfiguration {
 		HandlerBeanPostProcessor beanPostProcessor = new HandlerBeanPostProcessor();
 		beanPostProcessor.setRepository(handlerRepository());
 		return beanPostProcessor;
+	}
+
+	@Bean
+	public BeanPostProcessor bodyCodecBeanPostProcessor() {
+		BodyCodecBeanPostProcessor beanPostProcessor = new BodyCodecBeanPostProcessor();
+		beanPostProcessor.setRepository(bodyCodecRepository());
+		return beanPostProcessor;
+	}
+
+	@Bean
+	public BodyCodecRepository bodyCodecRepository() {
+		return new BodyCodecRepositoryImpl();
 	}
 
 	@Bean

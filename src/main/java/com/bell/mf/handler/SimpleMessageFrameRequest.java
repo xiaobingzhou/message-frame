@@ -3,6 +3,7 @@ package com.bell.mf.handler;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bell.mf.IMessageFrame;
 
 import lombok.Builder;
@@ -26,4 +27,5 @@ public class SimpleMessageFrameRequest implements Serializable, MessageFrameRequ
 	private IMessageFrame messageFrame;
 	private String message;
 	private Date systemDate;
+	private JSONObject bodyJson;
 }

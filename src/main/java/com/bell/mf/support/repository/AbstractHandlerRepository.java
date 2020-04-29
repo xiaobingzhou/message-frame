@@ -73,13 +73,23 @@ public abstract class AbstractHandlerRepository implements HandlerRepository,  A
 	 * @param parameterNames
 	 */
 	private void checkMethodParameterNames(Method method, String[] parameterNames) {
+		ParameterName[] names = ParameterName.values();
 		for (String parameterName : parameterNames) {
-			if (ParameterName.DEVICE_ID.getName().equals(parameterName)) {
-			} else if (ParameterName.MESSAGE_FRAME.getName().equals(parameterName)) {
-			} else if (ParameterName.MESSAGE.getName().equals(parameterName)) {
-			} else if (ParameterName.SYS_DATE.getName().equals(parameterName)) {
-			} else {
-				throw new BeanCreationException(String.format("[%s]()方法的[%s]参数名不支持，参数名只支持ParameterName枚举类参数%s", method.getName(), parameterName, ParameterName.getAllName()));
+			boolean support = false;
+			for (ParameterName name : names) {
+				if (name.getName().equals(parameterName)) {
+					support = true;
+					break;
+				}
+			}
+			if (!support) {
+				System.out.println(method);
+				System.out.println();
+				System.out.println(method.getClass());
+				throw new BeanCreationException(
+						String.format("[%s.%s()] 不支持参数名 [%s]，只支持ParameterName枚举类中的参数名 %s",
+								method.getDeclaringClass().getName(), method.getName(),
+								parameterName, ParameterName.getAllName()));
 			}
 		}
 	}

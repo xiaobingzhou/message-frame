@@ -28,20 +28,21 @@ public abstract class AbstractHandler implements Handler{
 		IMessageFrame iMessageFrame = request.getMessageFrame();
 		Method method = getRepository().getHandlerMethod(iMessageFrame.getCommandCode());
 		if (method == null) {
-			throw new MessageFrameHandlerException("指令码：" + iMessageFrame.getCommandCode() + " 找不到解析方法！");
+			throw new MessageFrameHandlerException(String.format("指令码 [%s] 解析方法未找到",
+					iMessageFrame.getCommandCode()));
 		}
 		try {
 			method.invoke(getRepository().getHandler(iMessageFrame.getCommandCode()),
-					getMethodArgs(request));
+					getMethodArgs(request, method));
 		} catch (Exception e) {
 			throw new MessageFrameHandlerException(String.format("执行%s方法出错", method.getName()), e);
 		}
 	}
 
-	protected Object[] getMethodArgs(MessageFrameRequest request) {
+	protected Object[] getMethodArgs(MessageFrameRequest request, Method method) {
 		List<Object> list = new ArrayList<Object>();
-		String[] handlerMethodParameterNames = getRepository().getHandlerMethodParameterNames(request.getMessageFrame().getCommandCode());
-		
+		String[] handlerMethodParameterNames = getParameterNames(request);
+
 		for (String parameterName : handlerMethodParameterNames) {
 			if (ParameterName.DEVICE_ID.getName().equals(parameterName)) {
 				list.add(request.getDeviceId());
@@ -54,6 +55,10 @@ public abstract class AbstractHandler implements Handler{
 			}
 		}
 		return list.toArray();
+	}
+
+	protected String[] getParameterNames(MessageFrameRequest request) {
+		return getRepository().getHandlerMethodParameterNames(request.getMessageFrame().getCommandCode());
 	}
 
 }

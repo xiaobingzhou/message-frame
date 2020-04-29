@@ -2,6 +2,7 @@ package com.bell.mf.handler;
 
 import java.util.Date;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bell.mf.IMessageFrame;
 
 /**
@@ -36,4 +37,13 @@ public interface MessageFrameRequest {
 	 * @return
 	 */
 	Date getSystemDate();
+
+	/**
+	 * bodyJson
+	 */
+	JSONObject getBodyJson();
+	/**
+	 * bodyJson
+	 */
+	void setBodyJson(JSONObject bodyJson);
 }
