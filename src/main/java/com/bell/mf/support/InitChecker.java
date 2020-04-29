@@ -7,8 +7,8 @@ import com.bell.mf.support.repository.BindParamRepository;
 import com.bell.mf.support.repository.BodyCodecRepository;
 import com.bell.mf.support.repository.HandlerRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextException;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
@@ -44,11 +44,12 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
 
     private void checkBindParams(ApplicationContext applicationContext, Set<String> commandCodes, HandlerRepository handlerRepository) {
         List<BindParam> bindParamList = applicationContext.getBean(BindParamRepository.class).getBindParamList();
-
+        // 遍历指令码
         for (String commandCode : commandCodes) {
             Method method = handlerRepository.getHandlerMethod(commandCode);
-            String[] parameterNames = handlerRepository.getHandlerMethodParameterNames(commandCode);
             Class<?>[] parameterTypes = method.getParameterTypes();
+            // 遍历参数名
+            String[] parameterNames = handlerRepository.getHandlerMethodParameterNames(commandCode);
             for (int i = 0; i < parameterNames.length; i++) {
                 boolean support = false;
                 for (BindParam bindParam : bindParamList) {
@@ -58,7 +59,7 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
                     }
                 }
                 if (!support) {
-                    throw new BeanCreationException(String.format("[%s.%s()] 方法的参数名 [%s] 没有匹配到参数绑定器, 请检查参数名是否正确;" +
+                    throw new ApplicationContextException(String.format("[%s.%s()] 方法的参数名 [%s] 没有匹配到参数绑定器, 请检查参数名是否正确;" +
                                     "或者想使用自定义的参数绑定器, 那请实现 BindParam 接口并将其添加到spring容器中",
                             method.getDeclaringClass().getName(), method.getName(), parameterNames[i]));
                 }
@@ -68,7 +69,7 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     private void checkInterceptors(ApplicationContext applicationContext, Set<String> commandCodes) {
-        ExecutionChain executionChain = applicationContext.getBean("executionChain", ExecutionChain.class);
+        ExecutionChain executionChain = applicationContext.getBean(ExecutionChain.class);
         List<MessageFrameHandlerInterceptor> interceptors = executionChain.getInterceptors();
         log.debug("全局拦截器: " + interceptors);
 
@@ -80,7 +81,7 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     private void checkBodyCodec(ApplicationContext applicationContext, Set<String> commandCodes) {
-        BodyCodecRepository bodyCodecRepository = applicationContext.getBean("bodyCodecRepository", BodyCodecRepository.class);
+        BodyCodecRepository bodyCodecRepository = applicationContext.getBean(BodyCodecRepository.class);
         Set<String> bodyCodecRepositoryCommandCodes = bodyCodecRepository.getCommandCodes();
         log.debug("BodyCodec解码器: " + bodyCodecRepositoryCommandCodes);
 

@@ -66,15 +66,14 @@ public class MessageFrameHandlerAutoConfiguration {
 		return beanPostProcessor;
 	}
 
+	@Bean
+	public HandlerRepository handlerRepository() {
+		return new AnnotationSpringMessageFrameHandlerRepository();
+	}
 
 	@Bean
 	public BodyCodecRepository bodyCodecRepository() {
 		return new BodyCodecRepositoryImpl();
-	}
-
-	@Bean
-	public HandlerRepository handlerRepository() {
-		return new AnnotationSpringMessageFrameHandlerRepository();
 	}
 
 	@Bean
