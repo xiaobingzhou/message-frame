@@ -54,23 +54,24 @@ public class DispatcherHandlerEnhanceMethodParam extends DispatcherMessageFrameH
     protected Object[] bindParams(MessageFrameRequest request, Method method, String[] parameterNames, Class<?>[] parameterTypes) {
         int argsLength = parameterNames.length;
         Object[] args = new Object[argsLength];
-        BindParam[] cacheList = argsCache.getOrDefault(method, new BindParam[argsLength]);
+        BindParam[] bindParamsCache = argsCache.getOrDefault(method, new BindParam[argsLength]);
         for (int i = 0; i < argsLength; i++) {
-            BindParam cache = cacheList[i];
-            if (cache != null) {
-                cache.bind(parameterNames[i], parameterTypes[i], request, args, i);
+            if (bindParamsCache[i] != null) {
+                log.debug("使用已缓存的参数绑定器{}", bindParamsCache);
+                args[i] = bindParamsCache[i].bind(request);
                 continue;
             }
             for (BindParam bindParam : bindParamRepository.getBindParamList()) {
-                if (bindParam.bind(parameterNames[i], parameterTypes[i], request, args, i)) {
-                    log.debug("参数绑定，不使用缓存" + bindParam);
-                    cacheList[i] = (bindParam);
+                if (bindParam.support(parameterNames[i], parameterTypes[i])) {
+                    log.debug("参数绑定器{}, 绑定参数{}", bindParam, parameterNames[i]);
+                    args[i] = bindParam.bind(request);
+                    bindParamsCache[i] = bindParam;
                     break;
                 }
             }
         }
         // 设置缓存
-        argsCache.putIfAbsent(method, cacheList);
+        argsCache.putIfAbsent(method, bindParamsCache);
         return args;
     }
 

@@ -2,8 +2,15 @@ package com.bell.mf.support.bind;
 
 import com.bell.mf.handler.MessageFrameRequest;
 
-public interface BindParam {
+/**
+ * 参数绑定器接口
+ * @author bell.zhouxiaobing
+ * @since 1.5.5
+ */
+public interface BindParam<T> {
 
-    boolean bind(String parameterName, Class<?> parameterType, MessageFrameRequest request, Object[] args, int i);
+    boolean support(String parameterName, Class<T> parameterType);
+
+    T bind(MessageFrameRequest request);
 
 }

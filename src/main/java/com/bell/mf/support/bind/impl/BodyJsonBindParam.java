@@ -1,17 +1,23 @@
 package com.bell.mf.support.bind.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bell.mf.handler.MessageFrameRequest;
 import com.bell.mf.repository.ParameterName;
 import com.bell.mf.support.bind.BindParam;
 
-public class BodyJsonBindParam implements BindParam {
+public class BodyJsonBindParam implements BindParam<JSONObject> {
     @Override
-    public boolean bind(String parameterName, Class<?> parameterType, MessageFrameRequest request, Object[] args, int i) {
+    public boolean support(String parameterName, Class<JSONObject> parameterType) {
         ParameterName bodyJson = ParameterName.BODY_JSON;
-        if (bodyJson.getName().equals(parameterName) && bodyJson.getClazz().isAssignableFrom(parameterType)) {
-            args[i] = request.getBodyJson();
+        if (bodyJson.getName().equals(parameterName)
+                && bodyJson.getClazz().isAssignableFrom(parameterType)) {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public JSONObject bind(MessageFrameRequest request) {
+        return request.getBodyJson();
     }
 }
