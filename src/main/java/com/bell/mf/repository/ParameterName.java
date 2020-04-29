@@ -1,5 +1,6 @@
 package com.bell.mf.repository;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bell.mf.IMessageFrame;
 import com.bell.mf.handler.MessageFrameRequest;
 
@@ -18,6 +19,7 @@ public enum ParameterName {
 	MESSAGE_FRAME("messageFrame", IMessageFrame.class),
 	MESSAGE("message", String.class),
 	SYS_DATE("sysDate", Date.class),
+	BODY_JSON("bodyJson", JSONObject.class),
 	REQUEST("request", MessageFrameRequest.class);
 
 	String name;

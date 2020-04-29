@@ -4,44 +4,74 @@ import com.alibaba.fastjson.JSONObject;
 import com.bell.mf.handler.MessageFrameRequest;
 import com.bell.mf.mapper.Mapper;
 import com.bell.mf.mapper.MapperField;
-import com.bell.mf.repository.ParameterName;
+import com.bell.mf.support.bind.BindParam;
 import com.bell.mf.support.codec.BodyCodec;
+import com.bell.mf.support.repository.BindParamRepository;
 import com.bell.mf.support.repository.BodyCodecRepository;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 增强参数功能
  * @author bell.zhouxiaobing
  * @since 1.5.4
  */
+@Slf4j
 public class DispatcherHandlerEnhanceMethodParam extends DispatcherMessageFrameHandler{
 
-    private BodyCodecRepository bodyCodecRepository;
+    @Setter private BodyCodecRepository bodyCodecRepository;
 
-    public BodyCodecRepository getBodyCodecRepository() {
-        return bodyCodecRepository;
-    }
+    @Setter private BindParamRepository bindParamRepository;
 
-    public void setBodyCodecRepository(BodyCodecRepository bodyCodecRepository) {
-        this.bodyCodecRepository = bodyCodecRepository;
-    }
+    private Map<Method, BindParam[]> argsCache = new HashMap<>(128);
 
     @Override
     protected Object[] getMethodArgs(MessageFrameRequest request, Method method) {
         String[] parameterNames = getParameterNames(request);
         Class<?>[] parameterTypes = method.getParameterTypes();
 
-        if (!isNeedEnhance(parameterNames, parameterTypes)) {
-            return super.getMethodArgs(request, method);
-        }
-
         // body 字段解码
         bodyCodec(request);
 
-        // 增强
-        return new Object[] {request};
+        // 绑定参数
+        return bindParams(request, method, parameterNames, parameterTypes);
+    }
+
+    /**
+     * 绑定参数
+     * @param request
+     * @param method
+     * @param parameterNames
+     * @param parameterTypes
+     * @return Object[]
+     * @since 1.5.5
+     */
+    protected Object[] bindParams(MessageFrameRequest request, Method method, String[] parameterNames, Class<?>[] parameterTypes) {
+        int argsLength = parameterNames.length;
+        Object[] args = new Object[argsLength];
+        BindParam[] cacheList = argsCache.getOrDefault(method, new BindParam[argsLength]);
+        for (int i = 0; i < argsLength; i++) {
+            BindParam cache = cacheList[i];
+            if (cache != null) {
+                cache.bind(parameterNames[i], parameterTypes[i], request, args, i);
+                continue;
+            }
+            for (BindParam bindParam : bindParamRepository.getBindParamList()) {
+                if (bindParam.bind(parameterNames[i], parameterTypes[i], request, args, i)) {
+                    log.debug("参数绑定，不使用缓存" + bindParam);
+                    cacheList[i] = (bindParam);
+                    break;
+                }
+            }
+        }
+        // 设置缓存
+        argsCache.putIfAbsent(method, cacheList);
+        return args;
     }
 
     protected void bodyCodec(MessageFrameRequest request) {
@@ -49,36 +79,12 @@ public class DispatcherHandlerEnhanceMethodParam extends DispatcherMessageFrameH
         String body = request.getMessageFrame().getBody();
         BodyCodec bodyCodec = bodyCodecRepository.getBodyCodec(commandCode);
         if (bodyCodec == null) {
-            throw new RuntimeException(String.format("指令码 [%s] bodyCodec解码器未找到", commandCode));
+            log.info("指令码 [{}] bodyCodec解码器未找到", commandCode);
+            return;
         }
         List<MapperField> mapperFields = bodyCodec.getMapperFields();
         JSONObject bodyJson = Mapper.mapper(body, mapperFields);
         request.setBodyJson(bodyJson);
     }
 
-    /**
-     * 是否支持增强
-     * @param parameterNames
-     * @param parameterTypes
-     * @return boolean
-     */
-    protected boolean isNeedEnhance(String[] parameterNames, Class<?>[] parameterTypes) {
-        boolean needEnhance = false;
-        for (int i = 0; i < parameterNames.length; i++) {
-            // 参数类型和名称都是MessageFrameRequest
-            if (nameEquals(parameterNames[i]) && typeEquals(parameterTypes[i])) {
-                needEnhance = true;
-                break;
-            }
-        }
-        return needEnhance;
-    }
-
-    private boolean nameEquals(String parameterName) {
-        return ParameterName.REQUEST.getName().equals(parameterName);
-    }
-
-    private boolean typeEquals(Class<?> parameterType) {
-        return ParameterName.REQUEST.getClazz().isAssignableFrom(parameterType);
-    }
 }

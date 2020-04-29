@@ -32,9 +32,4 @@ public class BodyCodecBuilder implements BodyCodec {
         return this;
     }
 
-    public static void main(String[] args) {
-        BodyCodecBuilder.build().commandCode("1111")
-                .nextField(MapperField.builder().build())
-                .nextField(MapperField.builder().build());
-    }
 }
