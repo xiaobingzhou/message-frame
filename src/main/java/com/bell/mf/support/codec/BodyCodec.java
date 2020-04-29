@@ -13,13 +13,13 @@ public interface BodyCodec {
 
     /**
      * 解码器支持的指令码
-     * @return
+     * @return List<String>
      */
     List<String> getCommandCodes();
 
     /**
      * 解码时body的字段
-     * @return
+     * @return List<MapperField>
      */
     List<MapperField> getMapperFields();
 

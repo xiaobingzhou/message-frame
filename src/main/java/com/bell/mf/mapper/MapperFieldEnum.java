@@ -4,10 +4,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * @ClassName MapperFieldEnum
- * @Description 字段后置处理类枚举
+ * 字段后置处理类枚举
+ * 2019年11月28日
  * @author bell.zhouxiaobing
- * @date 2019年11月28日
  * @since 1.4.0
  */
 public enum MapperFieldEnum {

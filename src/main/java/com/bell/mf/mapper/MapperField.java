@@ -4,10 +4,9 @@ import lombok.Builder;
 import lombok.Data;
 
 /**
- * @ClassName MapperField
- * @Description 映射字段
+ * 映射字段
+ * 2019年11月28日
  * @author bell.zhouxiaobing
- * @date 2019年11月28日
  * @since 1.4.0
  */
 @Data

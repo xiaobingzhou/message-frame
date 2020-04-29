@@ -13,6 +13,8 @@ import java.util.List;
 
 /**
  * 增强参数功能
+ * @author bell.zhouxiaobing
+ * @since 1.5.4
  */
 public class DispatcherHandlerEnhanceMethodParam extends DispatcherMessageFrameHandler{
 
@@ -58,7 +60,7 @@ public class DispatcherHandlerEnhanceMethodParam extends DispatcherMessageFrameH
      * 是否支持增强
      * @param parameterNames
      * @param parameterTypes
-     * @return
+     * @return boolean
      */
     protected boolean isNeedEnhance(String[] parameterNames, Class<?>[] parameterTypes) {
         boolean needEnhance = false;

@@ -10,10 +10,9 @@ import com.bell.mf.mapper.MapperFieldHandler;
 import com.bell.mf.mapper.MapperFieldEnum;
 
 /**
- * @ClassName MapperFieldEnum
- * @Description 映射字段注解
+ * 映射字段注解
+ * 2019年11月28日
  * @author bell.zhouxiaobing
- * @date 2019年11月28日
  * @since 1.4.0
  * 
  */
@@ -22,29 +21,29 @@ import com.bell.mf.mapper.MapperFieldEnum;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MapperField {
 	/**
-	 * @Description 该字段的下标
-	 * @return
+	 * 该字段的下标
+	 * @return int
 	 */
 	int index();
 	
 	/**
-	 * @Description 该字段的长度
-	 * @return
+	 * 该字段的长度
+	 * @return int
 	 */
 	int length();
 
 	/**
-	 * @Description 该字段的后置处理类
+	 * 该字段的后置处理类
 	 * 如果设置该字段，那么postHandle不能是接口或抽象类
 	 * 如果该字段为默认值，则调用innerMethod枚举中你的匿名后置处理类
-	 * @return
+	 * @return Class<? extends MapperFieldHandler>
 	 */
 	Class<? extends MapperFieldHandler> postHandle() default MapperFieldHandler.class;
 	
 	/**
-	 * @Description 该字段的后置处理方法枚举，MapperFieldEnum返回后置处理类
+	 * 该字段的后置处理方法枚举，MapperFieldEnum返回后置处理类
 	 * 如果postHandle值为MapperFieldHandler，即调用MapperFieldEnum的getPostHandler获取后置处理类
-	 * @return
+	 * @return MapperFieldEnum
 	 */
 	MapperFieldEnum anonymousMethod() default MapperFieldEnum.original;
 	

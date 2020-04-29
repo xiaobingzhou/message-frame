@@ -16,34 +16,35 @@ public interface MessageFrameRequest {
 
 	/**
 	 *  解析过的消息帧
-	 * @return
+	 * @return IMessageFrame
 	 */
 	IMessageFrame getMessageFrame();
 
 	/**
 	 * 设备uuid
-	 * @return
+	 * @return String
 	 */
 	String getDeviceId();
 
 	/**
 	 *  原始消息帧
-	 * @return
+	 * @return String
 	 */
 	String getMessage();
 
 	/**
 	 * 系统时间
-	 * @return
+	 * @return Date
 	 */
 	Date getSystemDate();
 
 	/**
-	 * bodyJson
+	 * 获取bodyJson
+	 * @return JSONObject
 	 */
 	JSONObject getBodyJson();
 	/**
-	 * bodyJson
+	 * 设置bodyJson
 	 */
 	void setBodyJson(JSONObject bodyJson);
 }

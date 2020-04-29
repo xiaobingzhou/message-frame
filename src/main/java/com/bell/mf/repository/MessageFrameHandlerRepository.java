@@ -16,28 +16,27 @@ public interface MessageFrameHandlerRepository extends HandlerRepository{
 	 * 设置消息帧处理器到仓库里
 	 * @param messageFrameHandler
 	 * @param beanName
-	 * @return
 	 */
 	void setHandler(MessageFrameHandler messageFrameHandler, String beanName);
 	
 	/**
 	 * 根据指令码从仓库里或消息帧处理器
 	 * @param commandCode
-	 * @return
+	 * @return MessageFrameHandler
 	 */
 	MessageFrameHandler getHandler(String commandCode);
 	
 	/**
 	 * 根据指令码从仓库里获取对应的处理方法
 	 * @param commandCode
-	 * @return
+	 * @return Method
 	 */
 	Method getHandlerMethod(String commandCode);
 	
 	/**
 	 * 根据指令码从仓库里获取对应的处理方法的参数名
 	 * @param commandCode
-	 * @return
+	 * @return String[]
 	 */
 	String[] getHandlerMethodParameterNames(String commandCode);
 	

@@ -10,19 +10,18 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * @ClassName Mapper
- * @Description 映射工具
+ * 映射工具
+ * 2019年11月28日
  * @author bell.zhouxiaobing
- * @date 2019年11月28日
  * @since 1.4.0
  */
 public class Mapper {
 
 	/**
-	 * @Description 根据targetClass字段上标注的@MFMapperField注解解析body字符串
+	 * 根据targetClass字段上标注的@MFMapperField注解解析body字符串
 	 * @param body
 	 * @param targetClass
-	 * @return
+	 * @return <T> T
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
@@ -54,10 +53,10 @@ public class Mapper {
 	}
 
 	/**
-	 * @Description 根据MapperField的list集合解析body字符串
+	 * 根据MapperField的list集合解析body字符串
 	 * @param body
 	 * @param list
-	 * @return
+	 * @return JSONObject
 	 */
 	public static JSONObject mapper(final String body, List<MapperField> list) {
 		if (StringUtils.isEmpty(body) || list.isEmpty())

@@ -1,7 +1,6 @@
 package com.bell.mf.support;
 
 import com.bell.mf.support.interceptor.ExecutionChain;
-import com.bell.mf.support.interceptor.InterceptorAdaptor;
 import com.bell.mf.support.interceptor.MessageFrameHandlerInterceptor;
 import com.bell.mf.support.repository.BodyCodecRepository;
 import com.bell.mf.support.repository.HandlerRepository;
@@ -10,11 +9,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
+/**
+ * 初始化检查器
+ * @author bell.zhouxiaobing
+ * @since 1.5.4
+ */
 @Slf4j
 public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
     @Override

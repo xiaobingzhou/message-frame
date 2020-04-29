@@ -14,34 +14,34 @@ public interface HandlerRepository {
 	 * 设置消息帧处理器到仓库里
 	 * @param messageFrameHandler
 	 * @param beanName
-	 * @return
 	 */
 	void setHandler(Object messageFrameHandler, String beanName);
 	
 	/**
 	 * 根据指令码从仓库里或消息帧处理器
 	 * @param commandCode
-	 * @return
+	 * @return Object
 	 */
 	Object getHandler(String commandCode);
 	
 	/**
 	 * 根据指令码从仓库里获取对应的处理方法
 	 * @param commandCode
-	 * @return
+	 * @return Method
 	 */
 	Method getHandlerMethod(String commandCode);
 	
 	/**
 	 * 根据指令码从仓库里获取对应的处理方法的参数名
 	 * @param commandCode
-	 * @return
+	 * @return String[]
 	 */
 	String[] getHandlerMethodParameterNames(String commandCode);
 
 	/**
 	 * 获取保存的指令码
-	 * @return
+	 * @return Set<String>
+	 * @since 1.5.4
 	 */
 	Set<String> getCommandCodes();
 }

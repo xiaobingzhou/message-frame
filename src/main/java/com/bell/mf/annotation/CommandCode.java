@@ -16,7 +16,7 @@ public @interface CommandCode {
 
 	/**
 	 * 指令码
-	 * @return
+	 * @return String[]
 	 */
 	String[] value();
 	
