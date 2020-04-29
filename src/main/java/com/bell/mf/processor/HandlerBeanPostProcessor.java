@@ -1,12 +1,12 @@
 package com.bell.mf.processor;
 
+import com.bell.mf.annotation.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.Ordered;
 
-import com.bell.mf.annotation.MessageFrameHandler;
 import com.bell.mf.repository.HandlerRepository;
 
 /**
@@ -36,7 +36,7 @@ public class HandlerBeanPostProcessor implements BeanPostProcessor, Ordered{
 	}
 
 	private boolean hasHandlerAnnotation(Object bean) {
-		boolean hasHandlerAnnotation = bean.getClass().getDeclaredAnnotation(MessageFrameHandler.class) != null;
+		boolean hasHandlerAnnotation = bean.getClass().getDeclaredAnnotation(Handler.class) != null;
 		return hasHandlerAnnotation;
 	}
 

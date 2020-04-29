@@ -1,6 +1,6 @@
 package com.bell.mf.bind.impl;
 
-import com.bell.mf.handler.MessageFrameRequest;
+import com.bell.mf.request.HandlerRequest;
 import com.bell.mf.enums.ParameterNameEnum;
 import com.bell.mf.bind.BindParam;
 
@@ -17,7 +17,7 @@ public class DeviceIdBindParam implements BindParam<String> {
     }
 
     @Override
-    public String bind(MessageFrameRequest request) {
+    public String bind(HandlerRequest request) {
         return request.getDeviceId();
     }
 }

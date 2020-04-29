@@ -2,7 +2,7 @@ package com.bell.mf.enums;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bell.mf.IMessageFrame;
-import com.bell.mf.handler.MessageFrameRequest;
+import com.bell.mf.request.HandlerRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +20,7 @@ public enum ParameterNameEnum {
 	MESSAGE("message", String.class),
 	SYS_DATE("sysDate", Date.class),
 	BODY_JSON("bodyJson", JSONObject.class),
-	REQUEST("request", MessageFrameRequest.class);
+	REQUEST("request", HandlerRequest.class);
 
 	String name;
 	Class clazz;

@@ -2,7 +2,7 @@ package com.bell.mf.interceptor;
 
 import java.util.List;
 
-import com.bell.mf.handler.MessageFrameRequest;
+import com.bell.mf.request.HandlerRequest;
 
 /**
  * ExecutionChain接口，定义方法拦截器执行
@@ -12,14 +12,14 @@ import com.bell.mf.handler.MessageFrameRequest;
 public interface ExecutionChain {
 
 	// 全局拦截器
-	List<MessageFrameHandlerInterceptor> getInterceptors();
+	List<HandlerInterceptor> getInterceptors();
 
 	// 指令码拦截器
-	List<MessageFrameHandlerInterceptor> getCommandCodeInterceptors(String commandCode);
+	List<HandlerInterceptor> getCommandCodeInterceptors(String commandCode);
 
-	boolean addInterceptor(MessageFrameHandlerInterceptor interceptor);
+	boolean addInterceptor(HandlerInterceptor interceptor);
 	
-	void applyPreHandle(MessageFrameRequest request);
+	void applyPreHandle(HandlerRequest request);
 	
-	void applyPostHandle(MessageFrameRequest request);
+	void applyPostHandle(HandlerRequest request);
 }

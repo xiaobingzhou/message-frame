@@ -1,7 +1,7 @@
 package com.bell.mf.bind.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bell.mf.handler.MessageFrameRequest;
+import com.bell.mf.request.HandlerRequest;
 import com.bell.mf.enums.ParameterNameEnum;
 import com.bell.mf.bind.BindParam;
 
@@ -17,7 +17,7 @@ public class BodyJsonBindParam implements BindParam<JSONObject> {
     }
 
     @Override
-    public JSONObject bind(MessageFrameRequest request) {
+    public JSONObject bind(HandlerRequest request) {
         return request.getBodyJson();
     }
 }

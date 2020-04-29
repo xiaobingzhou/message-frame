@@ -6,7 +6,7 @@ import com.bell.mf.annotation.CommandCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.bell.mf.handler.MessageFrameRequest;
+import com.bell.mf.request.HandlerRequest;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.annotation.AnnotationUtils;
 
@@ -15,23 +15,23 @@ import org.springframework.core.annotation.AnnotationUtils;
  * @author bell.zhouxiaobing
  * @since 1.3
  */
-public class MessageFrameHandlerExecutionChain implements ExecutionChain {
+public class ExecutionChainImpl implements ExecutionChain {
 
-	private static final Logger logger = LoggerFactory.getLogger(MessageFrameHandlerExecutionChain.class);
+	private static final Logger logger = LoggerFactory.getLogger(ExecutionChainImpl.class);
 
-	private List<MessageFrameHandlerInterceptor> interceptors = new ArrayList<>();
+	private List<HandlerInterceptor> interceptors = new ArrayList<>();
 
     /**
      * 指令码对应的拦截器
      */
-	private Map<String, List<MessageFrameHandlerInterceptor>> commandCodeInterceptorsMap = new HashMap<>();
+	private Map<String, List<HandlerInterceptor>> commandCodeInterceptorsMap = new HashMap<>();
 
     /**
      * 添加指令码拦截器
      */
-    public boolean addCommandCodeInterceptor(MessageFrameHandlerInterceptor interceptor, CommandCode commandCode) {
+    public boolean addCommandCodeInterceptor(HandlerInterceptor interceptor, CommandCode commandCode) {
         Arrays.stream(commandCode.value()).forEach(c -> {
-            List<MessageFrameHandlerInterceptor> list = commandCodeInterceptorsMap.get(c);
+            List<HandlerInterceptor> list = commandCodeInterceptorsMap.get(c);
             if (list == null) {
                 list = new ArrayList<>();
             }
@@ -42,7 +42,7 @@ public class MessageFrameHandlerExecutionChain implements ExecutionChain {
         return true;
     }
 
-    public boolean addInterceptor(MessageFrameHandlerInterceptor interceptor) {
+    public boolean addInterceptor(HandlerInterceptor interceptor) {
 		if (interceptor == null) {
 			logger.info("interceptor is null!");
 			return false;
@@ -58,61 +58,61 @@ public class MessageFrameHandlerExecutionChain implements ExecutionChain {
 		return addCommandCodeInterceptor(interceptor, commandCode);
 	}
 
-    private CommandCode getAnnotation(MessageFrameHandlerInterceptor interceptor) {
+    private CommandCode getAnnotation(HandlerInterceptor interceptor) {
         return AnnotationUtils.findAnnotation(interceptor.getClass(), CommandCode.class);
     }
 
-    public void applyPreHandle(MessageFrameRequest request) {
+    public void applyPreHandle(HandlerRequest request) {
         // 全局拦截器-前置处理
-		for (MessageFrameHandlerInterceptor interceptor : interceptors) {
+		for (HandlerInterceptor interceptor : interceptors) {
             preHandle(request, interceptor);
         }
 
         // 指令码拦截器-前置处理
-        for (MessageFrameHandlerInterceptor interceptor : commandCodeInterceptors(request)) {
+        for (HandlerInterceptor interceptor : commandCodeInterceptors(request)) {
             preHandle(request, interceptor);
         }
 
 	}
 
-    private void preHandle(MessageFrameRequest request, MessageFrameHandlerInterceptor interceptor) {
+    private void preHandle(HandlerRequest request, HandlerInterceptor interceptor) {
         if (interceptor.support(request)) {
             interceptor.preHandle(request);
         }
     }
 
-    public void applyPostHandle(MessageFrameRequest request) {
+    public void applyPostHandle(HandlerRequest request) {
         // 全局拦截器-后置处理
-		for (MessageFrameHandlerInterceptor interceptor : interceptors) {
+		for (HandlerInterceptor interceptor : interceptors) {
             postHandle(request, interceptor);
         }
 
         // 指令码拦截器-后置处理
-        for (MessageFrameHandlerInterceptor interceptor : commandCodeInterceptors(request)) {
+        for (HandlerInterceptor interceptor : commandCodeInterceptors(request)) {
             postHandle(request, interceptor);
         }
 
     }
 
-    private void postHandle(MessageFrameRequest request, MessageFrameHandlerInterceptor interceptor) {
+    private void postHandle(HandlerRequest request, HandlerInterceptor interceptor) {
         if (interceptor.support(request)) {
             interceptor.postHandle(request);
         }
     }
 
-    private List<MessageFrameHandlerInterceptor> commandCodeInterceptors(MessageFrameRequest request) {
+    private List<HandlerInterceptor> commandCodeInterceptors(HandlerRequest request) {
         String commandCode = request.getMessageFrame().getCommandCode();
-        List<MessageFrameHandlerInterceptor> list = commandCodeInterceptorsMap.get(commandCode);
+        List<HandlerInterceptor> list = commandCodeInterceptorsMap.get(commandCode);
         return Objects.isNull(list) ? Collections.emptyList() : list;
     }
 
     @Override
-    public List<MessageFrameHandlerInterceptor> getInterceptors() {
+    public List<HandlerInterceptor> getInterceptors() {
         return interceptors;
     }
 
     @Override
-    public List<MessageFrameHandlerInterceptor> getCommandCodeInterceptors(String commandCode) {
+    public List<HandlerInterceptor> getCommandCodeInterceptors(String commandCode) {
         return commandCodeInterceptorsMap.get(commandCode);
     }
 }

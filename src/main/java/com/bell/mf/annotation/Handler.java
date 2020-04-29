@@ -1,20 +1,18 @@
 package com.bell.mf.annotation;
 
-import com.bell.mf.HandlerAutoConfiguration;
-import org.springframework.context.annotation.Import;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 启用MessageFrameHandler功能
+ * Mark as a Handler class
+ * 标记为一个Handler类
  * @author bell.zhouxiaobing
- * @since 1.5.1
+ * @since 1.3
+ *
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import(HandlerAutoConfiguration.class)
-public @interface EnableHandler {
+public @interface Handler {
 }

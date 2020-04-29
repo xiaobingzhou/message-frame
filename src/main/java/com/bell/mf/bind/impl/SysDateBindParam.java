@@ -1,6 +1,6 @@
 package com.bell.mf.bind.impl;
 
-import com.bell.mf.handler.MessageFrameRequest;
+import com.bell.mf.request.HandlerRequest;
 import com.bell.mf.enums.ParameterNameEnum;
 import com.bell.mf.bind.BindParam;
 
@@ -19,7 +19,7 @@ public class SysDateBindParam implements BindParam<Date> {
     }
 
     @Override
-    public Date bind(MessageFrameRequest request) {
+    public Date bind(HandlerRequest request) {
         return request.getSystemDate();
     }
 }

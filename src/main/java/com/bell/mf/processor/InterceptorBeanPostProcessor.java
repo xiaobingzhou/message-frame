@@ -7,7 +7,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.Ordered;
 
-import com.bell.mf.interceptor.MessageFrameHandlerInterceptor;
+import com.bell.mf.interceptor.HandlerInterceptor;
 
 /**
  * 方法拦截器后置处理器
@@ -27,9 +27,9 @@ public class InterceptorBeanPostProcessor implements BeanPostProcessor, Ordered{
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-		if (bean instanceof MessageFrameHandlerInterceptor) {
+		if (bean instanceof HandlerInterceptor) {
 			logger.info("InterceptorBeanPostProcessor ==> "+beanName);
-			getExecutionChain().addInterceptor((MessageFrameHandlerInterceptor)bean);
+			getExecutionChain().addInterceptor((HandlerInterceptor)bean);
 		}
 		return bean;
 	}

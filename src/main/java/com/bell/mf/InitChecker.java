@@ -1,8 +1,8 @@
-package com.bell.mf.support;
+package com.bell.mf;
 
 import com.bell.mf.bind.BindParam;
 import com.bell.mf.interceptor.ExecutionChain;
-import com.bell.mf.interceptor.MessageFrameHandlerInterceptor;
+import com.bell.mf.interceptor.HandlerInterceptor;
 import com.bell.mf.repository.BindParamRepository;
 import com.bell.mf.repository.BodyCodecRepository;
 import com.bell.mf.repository.HandlerRepository;
@@ -70,7 +70,7 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
 
     private void checkInterceptors(ApplicationContext applicationContext, Set<String> commandCodes) {
         ExecutionChain executionChain = applicationContext.getBean(ExecutionChain.class);
-        List<MessageFrameHandlerInterceptor> interceptors = executionChain.getInterceptors();
+        List<HandlerInterceptor> interceptors = executionChain.getInterceptors();
         log.debug("全局拦截器: " + interceptors);
 
         for (String commandCode : commandCodes) {

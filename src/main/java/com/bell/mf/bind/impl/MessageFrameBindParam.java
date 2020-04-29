@@ -1,7 +1,7 @@
 package com.bell.mf.bind.impl;
 
 import com.bell.mf.IMessageFrame;
-import com.bell.mf.handler.MessageFrameRequest;
+import com.bell.mf.request.HandlerRequest;
 import com.bell.mf.enums.ParameterNameEnum;
 import com.bell.mf.bind.BindParam;
 
@@ -18,7 +18,7 @@ public class MessageFrameBindParam implements BindParam<IMessageFrame> {
     }
 
     @Override
-    public IMessageFrame bind(MessageFrameRequest request) {
+    public IMessageFrame bind(HandlerRequest request) {
         return request.getMessageFrame();
     }
 }
