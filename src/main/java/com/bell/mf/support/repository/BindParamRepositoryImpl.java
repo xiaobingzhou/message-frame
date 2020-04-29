@@ -13,7 +13,7 @@ public class BindParamRepositoryImpl implements BindParamRepository {
      * 保存指令码和bodyCodec解码器的对应关系
      * body_codec_map
      */
-    private static List<BindParam> BIND_PARAM_LIST = new ArrayList<>(5);
+    private static List<BindParam> BIND_PARAM_LIST = new ArrayList<>();
 
     /**
      * 获取参数绑定集
