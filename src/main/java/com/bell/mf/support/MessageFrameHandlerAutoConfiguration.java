@@ -9,8 +9,6 @@ import com.bell.mf.support.repository.*;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.bell.mf.repository.MessageFrameHandlerRepository;
-import com.bell.mf.repository.SpringMessageFrameHandlerRepository;
 import com.bell.mf.support.interceptor.MessageFrameHandlerExecutionChain;
 import com.bell.mf.support.processor.HandlerBeanPostProcessor;
 import com.bell.mf.support.processor.InterceptorBeanPostProcessor;
@@ -79,11 +77,6 @@ public class MessageFrameHandlerAutoConfiguration {
 	@Bean
 	public BindParamRepository bindParamRepository() {
 		return new BindParamRepositoryImpl();
-	}
-
-	@Bean
-	public MessageFrameHandlerRepository messageFrameHandlerRepository() {
-		return new SpringMessageFrameHandlerRepository();
 	}
 
 	@Bean

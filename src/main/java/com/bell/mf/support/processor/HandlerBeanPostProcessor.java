@@ -29,24 +29,11 @@ public class HandlerBeanPostProcessor implements BeanPostProcessor, Ordered{
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		boolean hasHandlerAnnotation = hasHandlerAnnotation(bean);
-		boolean isHandlerImpl = isHandlerImpl(bean);
 		if (hasHandlerAnnotation) {
-			if (isHandlerImpl) {
-				String msg = "["+beanName + "]使用了@MessageFrameHandler注解就不能够是MessageFrameHandler的实现类！";
-				logger.error(msg);
-				throw new FatalBeanException(msg);
-			}
 			logger.info("HandlerBeanPostProcessor hasHandlerAnnotation ==> "+beanName);
-			repository.setHandler(bean, beanName);
-		}else if (isHandlerImpl) {
-			logger.info("HandlerBeanPostProcessor isHandlerImpl ==> "+beanName);
 			repository.setHandler(bean, beanName);
 		}
 		return bean;
-	}
-
-	private boolean isHandlerImpl(Object bean) {
-		return bean instanceof com.bell.mf.handler.MessageFrameHandler;
 	}
 
 	private boolean hasHandlerAnnotation(Object bean) {
