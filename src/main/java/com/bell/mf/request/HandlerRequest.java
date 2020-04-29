@@ -3,12 +3,13 @@ package com.bell.mf.request;
 import java.util.Date;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bell.mf.Dispatcher;
 import com.bell.mf.IMessageFrame;
 import com.bell.mf.handler.AbstractHandler;
 
 /**
  * HandlerRequest接口，封装请求参数</br>
- * {@link com.bell.mf.support.Dispatcher}
+ * {@link Dispatcher}
  * {@link AbstractHandler}
  * @author bell.zhouxiaobing
  * @since 1.2

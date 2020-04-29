@@ -9,8 +9,6 @@ import com.bell.mf.repository.*;
 import com.bell.mf.repository.impl.HandlerRepositoryImpl;
 import com.bell.mf.repository.impl.BindParamRepositoryImpl;
 import com.bell.mf.repository.impl.BodyCodecRepositoryImpl;
-import com.bell.mf.support.Dispatcher;
-import com.bell.mf.support.DispatcherImpl;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

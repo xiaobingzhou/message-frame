@@ -1,4 +1,4 @@
-package com.bell.mf.support;
+package com.bell.mf;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bell.mf.bind.BindParam;
