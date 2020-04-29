@@ -10,6 +10,8 @@ import java.lang.annotation.Target;
 
 /**
  * 启用MessageFrameHandler功能
+ * @author bell.zhouxiaobing
+ * @since 1.5.1
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

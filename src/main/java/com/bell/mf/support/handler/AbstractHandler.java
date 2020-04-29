@@ -11,7 +11,7 @@ import com.bell.mf.repository.ParameterName;
 import com.bell.mf.support.repository.HandlerRepository;
 
 /**
- * 
+ * AbstractHandler，指令码处理抽象类
  * @author bell.zhouxiaobing
  * @since 1.3
  */
