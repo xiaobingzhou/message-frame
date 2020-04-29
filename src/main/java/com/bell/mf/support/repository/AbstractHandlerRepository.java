@@ -1,9 +1,7 @@
 package com.bell.mf.support.repository;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
@@ -129,7 +127,12 @@ public abstract class AbstractHandlerRepository implements HandlerRepository,  A
 		return store.getParameterNames();
 	}
 
-	/**
+    @Override
+    public Set<String> getCommandCodes() {
+        return COMMAND_CODE_MATCH_HANDLER_STORE_MAP.keySet();
+    }
+
+    /**
 	 * @param commandCode
 	 * @return
 	 */

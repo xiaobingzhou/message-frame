@@ -67,9 +67,15 @@ public class Mapper {
 		int start = 0;
 		for (int i = 0; i < list.size(); i++) {
 			MapperField field = list.get(i);
-			String val = body.substring(start, start + field.getLength());
+			int length = field.getLength();
+			if (length <= 0) {// 表示截取body剩余的部分
+				String val = body.substring(start, body.length());
+				result.put(field.getName(), val);
+				break;
+			}
+			String val = body.substring(start, start + length);
 			result.put(field.getName(), val);
-			start += field.getLength();
+			start += length;
 		}
 		// postHandle
 		for (int i = 0; i < list.size(); i++) {

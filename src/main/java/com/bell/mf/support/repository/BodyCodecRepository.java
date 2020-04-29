@@ -2,6 +2,8 @@ package com.bell.mf.support.repository;
 
 import com.bell.mf.support.codec.BodyCodec;
 
+import java.util.Set;
+
 /**
  * bodyCodec解码器的仓库
  * @author bell.zhouxiaobing
@@ -22,4 +24,11 @@ public interface BodyCodecRepository {
      * @return
      */
     BodyCodec setBodyCodec(String commandCode, BodyCodec bodyCodec);
+
+    /**
+     * 获取保存的指令码
+     * @return
+     */
+    Set<String> getCommandCodes();
+
 }

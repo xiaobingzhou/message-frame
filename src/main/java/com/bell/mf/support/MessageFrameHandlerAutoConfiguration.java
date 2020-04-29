@@ -74,5 +74,9 @@ public class MessageFrameHandlerAutoConfiguration {
 		return new SpringMessageFrameHandlerRepository();
 	}
 
+	@Bean
+	public InitChecker initChecker() {
+		return new InitChecker();
+	}
 	
 }

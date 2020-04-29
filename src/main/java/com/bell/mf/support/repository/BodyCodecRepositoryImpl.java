@@ -4,6 +4,7 @@ import com.bell.mf.support.codec.BodyCodec;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * bodyCodec解码器的仓库
@@ -26,5 +27,10 @@ public class BodyCodecRepositoryImpl implements BodyCodecRepository {
     @Override
     public BodyCodec setBodyCodec(String commandCode, BodyCodec bodyCodec) {
         return BODY_CODEC_MAP.put(commandCode, bodyCodec);
+    }
+
+    @Override
+    public Set<String> getCommandCodes() {
+        return BODY_CODEC_MAP.keySet();
     }
 }

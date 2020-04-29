@@ -1,6 +1,7 @@
 package com.bell.mf.support.repository;
 
 import java.lang.reflect.Method;
+import java.util.Set;
 
 /**
  * HandlerRepository接口
@@ -38,5 +39,9 @@ public interface HandlerRepository {
 	 */
 	String[] getHandlerMethodParameterNames(String commandCode);
 
-
+	/**
+	 * 获取保存的指令码
+	 * @return
+	 */
+	Set<String> getCommandCodes();
 }
