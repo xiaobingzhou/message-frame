@@ -1,4 +1,4 @@
-package com.bell.mf.support.codec;
+package com.bell.mf.codec;
 
 import com.bell.mf.mapper.MapperField;
 

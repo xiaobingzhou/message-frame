@@ -1,7 +1,7 @@
 package com.bell.mf.support.processor;
 
 import com.bell.mf.mapper.MapperField;
-import com.bell.mf.support.codec.BodyCodec;
+import com.bell.mf.codec.BodyCodec;
 import com.bell.mf.support.repository.BodyCodecRepository;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
