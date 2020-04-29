@@ -1,4 +1,4 @@
-package com.bell.mf.support.repository;
+package com.bell.mf.repository;
 
 import com.bell.mf.bind.BindParam;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;

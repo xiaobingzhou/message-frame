@@ -1,7 +1,7 @@
-package com.bell.mf.support.processor;
+package com.bell.mf.processor;
 
 import com.bell.mf.bind.BindParam;
-import com.bell.mf.support.repository.BindParamRepository;
+import com.bell.mf.repository.BindParamRepository;
 import lombok.Setter;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;

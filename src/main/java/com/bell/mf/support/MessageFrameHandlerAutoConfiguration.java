@@ -2,16 +2,17 @@ package com.bell.mf.support;
 
 import com.bell.mf.bind.BindParam;
 import com.bell.mf.bind.impl.*;
-import com.bell.mf.support.interceptor.ExecutionChain;
-import com.bell.mf.support.processor.BindParamBeanPostProcessor;
-import com.bell.mf.support.processor.BodyCodecBeanPostProcessor;
+import com.bell.mf.interceptor.ExecutionChain;
+import com.bell.mf.processor.BindParamBeanPostProcessor;
+import com.bell.mf.processor.BodyCodecBeanPostProcessor;
+import com.bell.mf.repository.*;
 import com.bell.mf.support.repository.*;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.bell.mf.support.interceptor.MessageFrameHandlerExecutionChain;
-import com.bell.mf.support.processor.HandlerBeanPostProcessor;
-import com.bell.mf.support.processor.InterceptorBeanPostProcessor;
+import com.bell.mf.interceptor.MessageFrameHandlerExecutionChain;
+import com.bell.mf.processor.HandlerBeanPostProcessor;
+import com.bell.mf.processor.InterceptorBeanPostProcessor;
 
 /**
  * MessageFrameHandlerAutoConfiguration自动配置类

@@ -8,7 +8,7 @@ import com.bell.mf.IMessageFrame;
 /**
  * MessageFrameRequest接口，封装请求参数</br>
  * {@link com.bell.mf.support.Dispatcher}
- * {@link com.bell.mf.support.handler.AbstractHandler}
+ * {@link AbstractHandler}
  * @author bell.zhouxiaobing
  * @since 1.2
  */
