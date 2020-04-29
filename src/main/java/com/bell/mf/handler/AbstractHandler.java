@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bell.mf.IMessageFrame;
-import com.bell.mf.repository.ParameterName;
+import com.bell.mf.enums.ParameterNameEnum;
 import com.bell.mf.repository.HandlerRepository;
 
 /**
@@ -42,13 +42,13 @@ public abstract class AbstractHandler implements Handler{
 		String[] handlerMethodParameterNames = getParameterNames(request);
 
 		for (String parameterName : handlerMethodParameterNames) {
-			if (ParameterName.DEVICE_ID.getName().equals(parameterName)) {
+			if (ParameterNameEnum.DEVICE_ID.getName().equals(parameterName)) {
 				list.add(request.getDeviceId());
-			} else if (ParameterName.MESSAGE_FRAME.getName().equals(parameterName)) {
+			} else if (ParameterNameEnum.MESSAGE_FRAME.getName().equals(parameterName)) {
 				list.add(request.getMessageFrame());
-			} else if (ParameterName.MESSAGE.getName().equals(parameterName)) {
+			} else if (ParameterNameEnum.MESSAGE.getName().equals(parameterName)) {
 				list.add(request.getMessage());
-			} else if (ParameterName.SYS_DATE.getName().equals(parameterName)) {
+			} else if (ParameterNameEnum.SYS_DATE.getName().equals(parameterName)) {
 				list.add(request.getSystemDate());
 			}
 		}

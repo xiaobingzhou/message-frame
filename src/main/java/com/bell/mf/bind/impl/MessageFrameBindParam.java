@@ -2,14 +2,14 @@ package com.bell.mf.bind.impl;
 
 import com.bell.mf.IMessageFrame;
 import com.bell.mf.handler.MessageFrameRequest;
-import com.bell.mf.repository.ParameterName;
+import com.bell.mf.enums.ParameterNameEnum;
 import com.bell.mf.bind.BindParam;
 
 public class MessageFrameBindParam implements BindParam<IMessageFrame> {
 
     @Override
     public boolean support(String parameterName, Class<IMessageFrame> parameterType) {
-        ParameterName messageFrame = ParameterName.MESSAGE_FRAME;
+        ParameterNameEnum messageFrame = ParameterNameEnum.MESSAGE_FRAME;
         if (messageFrame.getName().equals(parameterName)
                 && messageFrame.getClazz().isAssignableFrom(parameterType)) {
             return true;

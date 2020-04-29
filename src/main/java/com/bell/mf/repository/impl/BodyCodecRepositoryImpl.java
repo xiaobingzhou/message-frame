@@ -1,6 +1,7 @@
-package com.bell.mf.repository;
+package com.bell.mf.repository.impl;
 
 import com.bell.mf.codec.BodyCodec;
+import com.bell.mf.repository.BodyCodecRepository;
 
 import java.util.HashMap;
 import java.util.Map;

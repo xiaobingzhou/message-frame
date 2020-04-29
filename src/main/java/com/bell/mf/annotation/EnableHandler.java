@@ -1,6 +1,6 @@
 package com.bell.mf.annotation;
 
-import com.bell.mf.support.MessageFrameHandlerAutoConfiguration;
+import com.bell.mf.support.HandlerAutoConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
@@ -15,6 +15,6 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import(MessageFrameHandlerAutoConfiguration.class)
-public @interface EnableMessageFrameHandler {
+@Import(HandlerAutoConfiguration.class)
+public @interface EnableHandler {
 }

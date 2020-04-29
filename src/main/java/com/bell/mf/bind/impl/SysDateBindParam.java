@@ -1,7 +1,7 @@
 package com.bell.mf.bind.impl;
 
 import com.bell.mf.handler.MessageFrameRequest;
-import com.bell.mf.repository.ParameterName;
+import com.bell.mf.enums.ParameterNameEnum;
 import com.bell.mf.bind.BindParam;
 
 import java.util.Date;
@@ -10,7 +10,7 @@ public class SysDateBindParam implements BindParam<Date> {
 
     @Override
     public boolean support(String parameterName, Class<Date> parameterType) {
-        ParameterName sysDate = ParameterName.SYS_DATE;
+        ParameterNameEnum sysDate = ParameterNameEnum.SYS_DATE;
         if (sysDate.getName().equals(parameterName)
                 && sysDate.getClazz().isAssignableFrom(parameterType)) {
             return true;
