@@ -1,14 +1,18 @@
 package com.bell.mf.support;
 
+import com.bell.mf.support.bind.BindParam;
 import com.bell.mf.support.interceptor.ExecutionChain;
 import com.bell.mf.support.interceptor.MessageFrameHandlerInterceptor;
+import com.bell.mf.support.repository.BindParamRepository;
 import com.bell.mf.support.repository.BodyCodecRepository;
 import com.bell.mf.support.repository.HandlerRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 
@@ -27,16 +31,43 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
         Set<String> commandCodes = handlerRepository.getCommandCodes();
         log.debug("指令码: " + commandCodes);
 
-        BodyCodecRepository bodyCodecRepository = applicationContext.getBean("bodyCodecRepository", BodyCodecRepository.class);
-        Set<String> bodyCodecRepositoryCommandCodes = bodyCodecRepository.getCommandCodes();
-        log.debug("BodyCodec解码器: " + bodyCodecRepositoryCommandCodes);
+        // 检查参数绑定器
+        checkBindParams(applicationContext, commandCodes, handlerRepository);
+
+        // 指令码拦截器
+        checkInterceptors(applicationContext, commandCodes);
+
+        // 检查解码器
+        checkBodyCodec(applicationContext, commandCodes);
+
+    }
+
+    private void checkBindParams(ApplicationContext applicationContext, Set<String> commandCodes, HandlerRepository handlerRepository) {
+        List<BindParam> bindParamList = applicationContext.getBean(BindParamRepository.class).getBindParamList();
 
         for (String commandCode : commandCodes) {
-            if (!bodyCodecRepositoryCommandCodes.contains(commandCode)) {
-                log.info("Checked ==> No Match BodyCodec解码器: [{}]", commandCode);
+            Method method = handlerRepository.getHandlerMethod(commandCode);
+            String[] parameterNames = handlerRepository.getHandlerMethodParameterNames(commandCode);
+            Class<?>[] parameterTypes = method.getParameterTypes();
+            for (int i = 0; i < parameterNames.length; i++) {
+                boolean support = false;
+                for (BindParam bindParam : bindParamList) {
+                    if (bindParam.support(parameterNames[i], parameterTypes[i])) {
+                        support = true;
+                        break;
+                    }
+                }
+                if (!support) {
+                    throw new BeanCreationException(String.format("[%s.%s()] 方法的参数名 [%s] 没有匹配到参数绑定器, 请检查参数名是否正确;" +
+                                    "或者想使用自定义的参数绑定器, 那请实现 BindParam 接口并将其添加到spring容器中",
+                            method.getDeclaringClass().getName(), method.getName(), parameterNames[i]));
+                }
             }
         }
 
+    }
+
+    private void checkInterceptors(ApplicationContext applicationContext, Set<String> commandCodes) {
         ExecutionChain executionChain = applicationContext.getBean("executionChain", ExecutionChain.class);
         List<MessageFrameHandlerInterceptor> interceptors = executionChain.getInterceptors();
         log.debug("全局拦截器: " + interceptors);
@@ -46,8 +77,18 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
                 log.info("Checked ==> No Match 指令码拦截器: [{}]", commandCode);
             }
         }
-
     }
 
+    private void checkBodyCodec(ApplicationContext applicationContext, Set<String> commandCodes) {
+        BodyCodecRepository bodyCodecRepository = applicationContext.getBean("bodyCodecRepository", BodyCodecRepository.class);
+        Set<String> bodyCodecRepositoryCommandCodes = bodyCodecRepository.getCommandCodes();
+        log.debug("BodyCodec解码器: " + bodyCodecRepositoryCommandCodes);
+
+        for (String commandCode : commandCodes) {
+            if (!bodyCodecRepositoryCommandCodes.contains(commandCode)) {
+                log.info("Checked ==> No Match BodyCodec解码器: [{}]", commandCode);
+            }
+        }
+    }
 
 }

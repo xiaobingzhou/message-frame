@@ -12,7 +12,6 @@ import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 
 import com.bell.mf.annotation.CommandCode;
-import com.bell.mf.repository.ParameterName;
 
 /**
  * 实现接口</br>
@@ -42,12 +41,13 @@ public abstract class AbstractHandlerRepository implements HandlerRepository,  A
 		for (Method method : declaredMethods) {
 			CommandCode annotation = method.getAnnotation(CommandCode.class);
 			if (annotation != null) {
+				String[] parameterNames = getParameterNames(method);
 				String[] value = annotation.value();
 				for (String commandCode : value) {
 					HandlerStore handlerStore = new HandlerStore();
 					handlerStore.setBeanName(beanName);
 					handlerStore.setMethod(method);
-					handlerStore.setParameterNames(getParameterNames(method));
+					handlerStore.setParameterNames(parameterNames);
 					Store put = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.put(commandCode, handlerStore);
 					if (put != null) {
 						String methodName = method.getDeclaringClass().getName()+"."+method.getName();
@@ -62,35 +62,9 @@ public abstract class AbstractHandlerRepository implements HandlerRepository,  A
 	protected String[] getParameterNames(Method method) {
 		ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
 		String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
-		checkMethodParameterNames(method, parameterNames);
 		return parameterNames;
 	}
 
-	/**
-	 * 检查方法的参数名是否支持
-	 * @param parameterNames
-	 */
-	private void checkMethodParameterNames(Method method, String[] parameterNames) {
-		ParameterName[] names = ParameterName.values();
-		for (String parameterName : parameterNames) {
-			boolean support = false;
-			for (ParameterName name : names) {
-				if (name.getName().equals(parameterName)) {
-					support = true;
-					break;
-				}
-			}
-			if (!support) {
-				System.out.println(method);
-				System.out.println();
-				System.out.println(method.getClass());
-				throw new BeanCreationException(
-						String.format("[%s.%s()] 不支持参数名 [%s]，只支持ParameterName枚举类中的参数名 %s",
-								method.getDeclaringClass().getName(), method.getName(),
-								parameterName, ParameterName.getAllName()));
-			}
-		}
-	}
 	@Override
 	public Object getHandler(String commandCode) {
 		if (isEmpty(commandCode)) {
