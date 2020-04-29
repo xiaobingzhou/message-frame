@@ -16,9 +16,9 @@ public enum MapperFieldEnum {
 	/** 16进制转2进制字符串 */
 	hex2BinStr((v, r) -> Integer.toBinaryString(Integer.valueOf(v, 16))),
 	/** 16进制转10进制整型 */
-	hex2DecInt((v, r) -> Integer.valueOf(v, 16)),
+	hex2OctInt((v, r) -> Integer.valueOf(v, 16)),
 	/** 16进制转10进制字符串 */
-	hex2DecStr((v, r) -> Integer.valueOf(v, 16).toString()),
+	hex2OctStr((v, r) -> Integer.valueOf(v, 16).toString()),
 	/** 解析为Date对象 */
 	datetime(datetimePostHandler());
 
