@@ -51,32 +51,26 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 		executionChain.applyPostHandle(request);
 	}
 
-	protected String[] getParameterNames(HandlerRequest request) {
-		return getHandlerRepository().getHandlerMethodParameterNames(request.getMessageFrame().getCommandCode());
-	}
-
 	@Override
-	protected Object[] getMethodArgs(HandlerRequest request, Method method) {
-		String[] parameterNames = getParameterNames(request);
-		Class<?>[] parameterTypes = method.getParameterTypes();
-
+	protected Object[] getMethodArgs(HandlerRequest request) {
 		// body 字段解码
 		bodyCodec(request);
 
 		// 绑定参数
-		return bindParams(request, method, parameterNames, parameterTypes);
+		return bindParams(request);
 	}
 
 	/**
 	 * 绑定参数
 	 * @param request
-	 * @param method
-	 * @param parameterNames
-	 * @param parameterTypes
 	 * @return Object[]
 	 * @since 1.5.5
 	 */
-	protected Object[] bindParams(HandlerRequest request, Method method, String[] parameterNames, Class<?>[] parameterTypes) {
+	protected Object[] bindParams(HandlerRequest request) {
+		Method method = getMethod(request);
+		Class<?>[] parameterTypes = method.getParameterTypes();
+		String[] parameterNames = getParameterNames(request);
+
 		int argsLength = parameterNames.length;
 		Object[] args = new Object[argsLength];
 		BindParam[] bindParamsCache = argsCache.getOrDefault(method, new BindParam[argsLength]);
@@ -111,5 +105,13 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 		List<MapperField> mapperFields = bodyCodec.getMapperFields();
 		JSONObject bodyJson = Mapper.mapper(body, mapperFields);
 		request.setBodyJson(bodyJson);
+	}
+
+	protected String[] getParameterNames(HandlerRequest request) {
+		return handlerRepository.getHandlerMethodParameterNames(request.getMessageFrame().getCommandCode());
+	}
+
+	protected Method getMethod(HandlerRequest request) {
+		return handlerRepository.getHandlerMethod(request.getMessageFrame().getCommandCode());
 	}
 }

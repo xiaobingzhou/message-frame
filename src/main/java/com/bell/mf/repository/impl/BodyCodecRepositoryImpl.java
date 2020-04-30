@@ -2,6 +2,7 @@ package com.bell.mf.repository.impl;
 
 import com.bell.mf.codec.BodyCodec;
 import com.bell.mf.repository.BodyCodecRepository;
+import org.springframework.beans.factory.DisposableBean;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +13,7 @@ import java.util.Set;
  * @author bell.zhouxiaobing
  * @since 1.5.4
  */
-public class BodyCodecRepositoryImpl implements BodyCodecRepository {
+public class BodyCodecRepositoryImpl implements BodyCodecRepository, DisposableBean {
 
     /**
      * 保存指令码和bodyCodec解码器的对应关系
@@ -33,5 +34,10 @@ public class BodyCodecRepositoryImpl implements BodyCodecRepository {
     @Override
     public Set<String> getCommandCodes() {
         return BODY_CODEC_MAP.keySet();
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        BODY_CODEC_MAP.clear();
     }
 }

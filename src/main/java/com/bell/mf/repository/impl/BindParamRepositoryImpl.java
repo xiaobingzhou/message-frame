@@ -2,13 +2,14 @@ package com.bell.mf.repository.impl;
 
 import com.bell.mf.bind.BindParam;
 import com.bell.mf.repository.BindParamRepository;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class BindParamRepositoryImpl implements BindParamRepository {
+public class BindParamRepositoryImpl implements BindParamRepository, DisposableBean {
 
     /**
      * 保存指令码和bodyCodec解码器的对应关系
@@ -37,5 +38,10 @@ public class BindParamRepositoryImpl implements BindParamRepository {
         boolean add = BIND_PARAM_LIST.add(bindParam);
         AnnotationAwareOrderComparator.sort(BIND_PARAM_LIST);// 排序
         return add;
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        BIND_PARAM_LIST.clear();
     }
 }

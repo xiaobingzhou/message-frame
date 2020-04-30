@@ -18,7 +18,7 @@ public abstract class AbstractHandler implements Handler {
 	
 	protected abstract HandlerRepository getHandlerRepository();
 
-	protected abstract Object[] getMethodArgs(HandlerRequest request, Method method);
+	protected abstract Object[] getMethodArgs(HandlerRequest request);
 	
 	/**
 	 * 使用反射来调用指令码对应的处理方法
@@ -34,7 +34,7 @@ public abstract class AbstractHandler implements Handler {
 		}
 		try {
 			method.invoke(getHandlerRepository().getHandler(iMessageFrame.getCommandCode()),
-					getMethodArgs(request, method));
+					getMethodArgs(request));
 		} catch (Exception e) {
 			throw new HandlerException(String.format("执行%s方法出错", method.getName()), e);
 		}
