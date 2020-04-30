@@ -7,13 +7,8 @@ import com.github.xiaobingzhou.messageframe.bind.BindParam;
 public class MessageBindParam implements BindParam<String> {
 
     @Override
-    public boolean support(String parameterName, Class<String> parameterType) {
-        ParameterNameEnum message = ParameterNameEnum.MESSAGE;
-        if (message.getName().equals(parameterName)
-                && message.getClazz().isAssignableFrom(parameterType)) {
-            return true;
-        }
-        return false;
+    public boolean support(String parameterName) {
+        return ParameterNameEnum.MESSAGE.getName().equals(parameterName);
     }
 
     @Override

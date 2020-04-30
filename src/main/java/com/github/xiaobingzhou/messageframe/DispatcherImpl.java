@@ -12,7 +12,6 @@ import com.github.xiaobingzhou.messageframe.request.HandlerRequest;
 import com.github.xiaobingzhou.messageframe.handler.AbstractHandler;
 import com.github.xiaobingzhou.messageframe.interceptor.ExecutionChain;
 import com.github.xiaobingzhou.messageframe.repository.HandlerRepository;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,7 +36,7 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 
 	@Setter private BindParamRepository bindParamRepository;
 
-	private Map<Method, BindParam[]> argsCache = new HashMap<>(128);
+	private static Map<Method, BindParam[]> BIND_PARAMS_CACHE_MAP = new HashMap<>(128);
 
 	@Override
 	public void dispatch(HandlerRequest request) throws HandlerException {
@@ -65,18 +64,20 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 
 	/**
 	 * 绑定参数
-	 * @param request
+	 * @param request 处理请求
 	 * @return Object[]
 	 * @since 1.5.5
 	 */
 	protected Object[] bindParams(HandlerRequest request) {
+	    // 通过request从handlerRepository获取方法
 		Method method = getMethod(request);
-		Class<?>[] parameterTypes = method.getParameterTypes();
+	    // 通过request从handlerRepository获取方法参数名
 		String[] parameterNames = getParameterNames(request);
 
 		int argsLength = parameterNames.length;
 		Object[] args = new Object[argsLength];
-		BindParam[] bindParamsCache = argsCache.getOrDefault(method, new BindParam[argsLength]);
+		// 通过方法从缓存中获取参数绑定器
+		BindParam[] bindParamsCache = BIND_PARAMS_CACHE_MAP.getOrDefault(method, new BindParam[argsLength]);
 		for (int i = 0; i < argsLength; i++) {
 			if (bindParamsCache[i] != null) {
 				log.debug("使用已缓存的参数绑定器{}", bindParamsCache);
@@ -84,7 +85,7 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 				continue;
 			}
 			for (BindParam bindParam : bindParamRepository.getBindParamList()) {
-				if (bindParam.support(parameterNames[i], parameterTypes[i])) {
+				if (bindParam.support(parameterNames[i])) {
 					log.debug("参数绑定器{}, 绑定参数{}", bindParam, parameterNames[i]);
 					args[i] = bindParam.bind(request);
 					bindParamsCache[i] = bindParam;
@@ -93,7 +94,7 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 			}
 		}
 		// 设置缓存
-		argsCache.putIfAbsent(method, bindParamsCache);
+		BIND_PARAMS_CACHE_MAP.putIfAbsent(method, bindParamsCache);
 		return args;
 	}
 

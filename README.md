@@ -9,7 +9,8 @@
 
 > com.github.xiaobingzhou.messageframe.codec.BodyCodec 解码器
 
-### 使用例子
+### 使用例子(最低版本1.6.0.RELEASE)
+###### https://github.com/xiaobingzhou/message-frame-sample
 
 > 解析字符串body：14041D08383B00FFFF
 

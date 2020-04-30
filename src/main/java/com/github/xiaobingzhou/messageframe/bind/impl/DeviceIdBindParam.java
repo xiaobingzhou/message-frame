@@ -7,13 +7,8 @@ import com.github.xiaobingzhou.messageframe.bind.BindParam;
 public class DeviceIdBindParam implements BindParam<String> {
 
     @Override
-    public boolean support(String parameterName, Class<String> parameterType) {
-        ParameterNameEnum deviceId = ParameterNameEnum.DEVICE_ID;
-        if (deviceId.getName().equals(parameterName)
-                && deviceId.getClazz().isAssignableFrom(parameterType)) {
-            return true;
-        }
-        return false;
+    public boolean support(String parameterName) {
+        return ParameterNameEnum.DEVICE_ID.getName().equals(parameterName);
     }
 
     @Override

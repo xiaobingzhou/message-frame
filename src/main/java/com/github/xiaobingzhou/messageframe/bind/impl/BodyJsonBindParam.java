@@ -7,13 +7,8 @@ import com.github.xiaobingzhou.messageframe.bind.BindParam;
 
 public class BodyJsonBindParam implements BindParam<JSONObject> {
     @Override
-    public boolean support(String parameterName, Class<JSONObject> parameterType) {
-        ParameterNameEnum bodyJson = ParameterNameEnum.BODY_JSON;
-        if (bodyJson.getName().equals(parameterName)
-                && bodyJson.getClazz().isAssignableFrom(parameterType)) {
-            return true;
-        }
-        return false;
+    public boolean support(String parameterName) {
+        return ParameterNameEnum.BODY_JSON.getName().equals(parameterName);
     }
 
     @Override
