@@ -23,14 +23,17 @@ public abstract class AbstractHandler implements Handler {
 	 * @throws HandlerException
 	 */
 	protected void doHandle(HandlerRequest request) throws HandlerException {
-		IMessageFrame iMessageFrame = request.getMessageFrame();
-		Method method = getHandlerRepository().getHandlerMethod(iMessageFrame.getCommandCode());
+		IMessageFrame messageFrame = request.getMessageFrame();
+		HandlerRepository handlerRepository = getHandlerRepository();
+
+		Method method = handlerRepository.getHandlerMethod(messageFrame.getCommandCode());
 		if (method == null) {
 			throw new HandlerException(String.format("指令码 [%s] 解析方法未找到",
-					iMessageFrame.getCommandCode()));
+					messageFrame.getCommandCode()));
 		}
+
 		try {
-			method.invoke(getHandlerRepository().getHandler(iMessageFrame.getCommandCode()),
+			method.invoke(handlerRepository.getHandler(messageFrame.getCommandCode()),
 					getMethodArgs(request));
 		} catch (Exception e) {
 			throw new HandlerException(String.format("执行%s方法出错", method.getName()), e);

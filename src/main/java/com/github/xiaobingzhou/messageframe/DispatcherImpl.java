@@ -1,13 +1,8 @@
 package com.github.xiaobingzhou.messageframe;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.xiaobingzhou.messageframe.bind.BindParam;
-import com.github.xiaobingzhou.messageframe.codec.BodyCodec;
 import com.github.xiaobingzhou.messageframe.handler.HandlerException;
-import com.github.xiaobingzhou.messageframe.mapper.Mapper;
-import com.github.xiaobingzhou.messageframe.mapper.MapperField;
 import com.github.xiaobingzhou.messageframe.repository.BindParamRepository;
-import com.github.xiaobingzhou.messageframe.repository.BodyCodecRepository;
 import com.github.xiaobingzhou.messageframe.request.HandlerRequest;
 import com.github.xiaobingzhou.messageframe.handler.AbstractHandler;
 import com.github.xiaobingzhou.messageframe.interceptor.ExecutionChain;
@@ -17,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,8 +26,6 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 	
 	@Setter private ExecutionChain executionChain;
 
-	@Setter private BodyCodecRepository bodyCodecRepository;
-
 	@Setter private BindParamRepository bindParamRepository;
 
 	private static Map<Method, BindParam[]> BIND_PARAMS_CACHE_MAP = new HashMap<>(128);
@@ -42,8 +34,10 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 	public void dispatch(HandlerRequest request) throws HandlerException {
 		// 执行前
 		executionChain.applyPreHandle(request);
+
 		// 执行处理
 		doHandle(request);
+
 		// 执行后
 		executionChain.applyPostHandle(request);
 	}
@@ -55,9 +49,6 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 
 	@Override
 	protected Object[] getMethodArgs(HandlerRequest request) {
-		// body 字段解码
-		bodyCodec(request);
-
 		// 绑定参数
 		return bindParams(request);
 	}
@@ -71,19 +62,22 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 	protected Object[] bindParams(HandlerRequest request) {
 	    // 通过request从handlerRepository获取方法
 		Method method = getMethod(request);
+
 	    // 通过request从handlerRepository获取方法参数名
 		String[] parameterNames = getParameterNames(request);
 
 		int argsLength = parameterNames.length;
-		Object[] args = new Object[argsLength];
 		// 通过方法从缓存中获取参数绑定器
 		BindParam[] bindParamsCache = BIND_PARAMS_CACHE_MAP.getOrDefault(method, new BindParam[argsLength]);
+
+		Object[] args = new Object[argsLength];
 		for (int i = 0; i < argsLength; i++) {
 			if (bindParamsCache[i] != null) {
 				log.debug("使用已缓存的参数绑定器{}", bindParamsCache);
 				args[i] = bindParamsCache[i].bind(request);
 				continue;
 			}
+
 			for (BindParam bindParam : bindParamRepository.getBindParamList()) {
 				if (bindParam.support(parameterNames[i])) {
 					log.debug("参数绑定器{}, 绑定参数{}", bindParam, parameterNames[i]);
@@ -93,22 +87,11 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 				}
 			}
 		}
+
 		// 设置缓存
 		BIND_PARAMS_CACHE_MAP.putIfAbsent(method, bindParamsCache);
-		return args;
-	}
 
-	protected void bodyCodec(HandlerRequest request) {
-		String commandCode = request.getMessageFrame().getCommandCode();
-		String body = request.getMessageFrame().getBody();
-		BodyCodec bodyCodec = bodyCodecRepository.getBodyCodec(commandCode);
-		if (bodyCodec == null) {
-			log.info("指令码 [{}] bodyCodec解码器未找到", commandCode);
-			return;
-		}
-		List<MapperField> mapperFields = bodyCodec.getMapperFields();
-		JSONObject bodyJson = Mapper.mapper(body, mapperFields);
-		request.setBodyJson(bodyJson);
+		return args;
 	}
 
 	protected String[] getParameterNames(HandlerRequest request) {

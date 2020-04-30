@@ -12,12 +12,16 @@ import java.util.Date;
 public enum MapperFieldEnum {
 	/** 什么也不处理 */
 	original((v, r) -> v),
+
 	/** 16进制转2进制字符串 */
 	hex2BinStr((v, r) -> Integer.toBinaryString(Integer.valueOf(v, 16))),
+
 	/** 16进制转10进制整型 */
 	hex2OctInt((v, r) -> Integer.valueOf(v, 16)),
+
 	/** 16进制转10进制字符串 */
 	hex2OctStr((v, r) -> Integer.valueOf(v, 16).toString()),
+
 	/** 解析为Date对象 */
 	datetime(datetimePostHandler());
 
@@ -39,6 +43,7 @@ public enum MapperFieldEnum {
 			int hour = Integer.valueOf(value.substring(6, 8), 16);
 			int minute = Integer.valueOf(value.substring(8, 10), 16);
 			int second = Integer.valueOf(value.substring(10, 12), 16);
+
 			Calendar calendar = Calendar.getInstance();
 			calendar.set(year, month, day, hour, minute, second);
 			calendar.set(Calendar.MILLISECOND, 0);
