@@ -29,8 +29,7 @@ import java.util.Map;
 @Slf4j
 public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 
-	@Setter
-	private HandlerRepository handlerRepository;
+	@Setter private HandlerRepository handlerRepository;
 	
 	@Setter private ExecutionChain executionChain;
 
