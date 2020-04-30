@@ -67,8 +67,7 @@ public class RepositoryBeanPostProcessor implements BeanPostProcessor, Ordered{
 	protected void addBodyCodec(Object bean, String beanName) {
 		if (bean instanceof BodyCodec) {
 			log.debug("{}: BodyCodec({}) ==> {}", this.getClass(), bean.getClass(), beanName);
-			BodyCodec bodyCodec = (BodyCodec)bean;
-			bodyCodecRepository.setBodyCodec(bodyCodec, beanName);
+			bodyCodecRepository.setBodyCodec((BodyCodec)bean, beanName);
 		}
 	}
 
