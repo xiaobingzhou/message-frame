@@ -2,9 +2,9 @@ package com.github.xiaobingzhou.messageframe;
 
 import com.github.xiaobingzhou.messageframe.bind.BindParam;
 import com.github.xiaobingzhou.messageframe.codec.BodyCodec;
+import com.github.xiaobingzhou.messageframe.enums.ParameterNameEnum;
 import com.github.xiaobingzhou.messageframe.interceptor.ExecutionChain;
 import com.github.xiaobingzhou.messageframe.interceptor.HandlerInterceptor;
-import com.github.xiaobingzhou.messageframe.mapper.MapperField;
 import com.github.xiaobingzhou.messageframe.repository.BindParamRepository;
 import com.github.xiaobingzhou.messageframe.repository.BodyCodecRepository;
 import com.github.xiaobingzhou.messageframe.repository.HandlerRepository;
@@ -24,12 +24,19 @@ import java.util.*;
  */
 @Slf4j
 public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
+
+    private HandlerProperties handlerProperties;
+
+    public InitChecker(HandlerProperties handlerProperties) {
+        this.handlerProperties = handlerProperties;
+    }
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         ApplicationContext applicationContext = event.getApplicationContext();
 
-        HandlerRepository handlerRepository = applicationContext.getBean(HandlerRepository.class);
-        Set<String> commandCodes = handlerRepository.getCommandCodes();
+        Set<String> commandCodes = applicationContext.getBean(HandlerRepository.class).getCommandCodes();
+
         log.debug("指令码: " + commandCodes);
 
         // 检查参数绑定器
@@ -46,6 +53,7 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
     private void checkBindParams(ApplicationContext applicationContext, Set<String> commandCodes) {
         HandlerRepository handlerRepository = applicationContext.getBean(HandlerRepository.class);
         List<BindParam> bindParamList = applicationContext.getBean(BindParamRepository.class).getBindParamList();
+
         // 遍历指令码，method去重
         List<Method> checkedMethods = new ArrayList<>();
         for (String commandCode : commandCodes) {
@@ -64,6 +72,7 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
                         break;
                     }
                 }
+
                 if (!support) {
                     throw new ApplicationContextException(
                             String.format("[%s.%s()] 方法的参数名 [%s] 没有匹配到参数绑定器, 请检查参数名是否正确; " +
@@ -77,6 +86,7 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
     private void checkInterceptors(ApplicationContext applicationContext, Set<String> commandCodes) {
         ExecutionChain executionChain = applicationContext.getBean(ExecutionChain.class);
         List<HandlerInterceptor> interceptors = executionChain.getInterceptors();
+
         log.debug("全局拦截器: " + interceptors);
 
         for (String commandCode : commandCodes) {
@@ -87,16 +97,42 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     private void checkBodyCodec(ApplicationContext applicationContext, Set<String> commandCodes) {
+        HandlerRepository handlerRepository = applicationContext.getBean(HandlerRepository.class);
         BodyCodecRepository bodyCodecRepository = applicationContext.getBean(BodyCodecRepository.class);
         Set<String> bodyCodecRepositoryCommandCodes = bodyCodecRepository.getCommandCodes();
+
         log.debug("BodyCodec解码器: " + bodyCodecRepositoryCommandCodes);
 
         for (String commandCode : commandCodes) {
             BodyCodec bodyCodec = bodyCodecRepository.getBodyCodec(commandCode);
             if (Objects.isNull(bodyCodec)) {
                 log.info("Checked ==> No Match BodyCodec: [{}]", commandCode);
+                // 是否跳过解码器检查
+                if (handlerProperties.isSkipBodyCodecCheck()) {
+                    continue;
+                }
+
+                List<String> needBodyCodec = needBodyCodec(handlerRepository, commandCode);
+                Method method = handlerRepository.getHandlerMethod(commandCode);
+
+                throw new ApplicationContextException(String.format("在[%s.%s]方法使用[%s]参数需要[%s]指令码的解码器",
+                        method.getDeclaringClass().getName(), method.getName(), needBodyCodec, commandCode));
             }
         }
+    }
+
+    private List<String> needBodyCodec(HandlerRepository handlerRepository, String commandCode) {
+        String[] parameterNames = handlerRepository.getHandlerMethodParameterNames(commandCode);
+        ArrayList<String> list = new ArrayList<>();
+
+        for (String parameterName : parameterNames) {
+            if (ParameterNameEnum.REQUEST.getName().equals(parameterName)
+                    || ParameterNameEnum.BODY_JSON.getName().equals(parameterName)) {
+                list.add(parameterName);
+            }
+        }
+
+        return list;
     }
 
 }

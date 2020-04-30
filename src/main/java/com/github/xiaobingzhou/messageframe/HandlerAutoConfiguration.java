@@ -11,6 +11,7 @@ import com.github.xiaobingzhou.messageframe.repository.impl.HandlerRepositoryImp
 import com.github.xiaobingzhou.messageframe.repository.impl.BindParamRepositoryImpl;
 import com.github.xiaobingzhou.messageframe.repository.impl.BodyCodecRepositoryImpl;
 import com.github.xiaobingzhou.messageframe.processor.RepositoryBeanPostProcessor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,9 @@ import com.github.xiaobingzhou.messageframe.interceptor.ExecutionChainImpl;
  */
 @Configuration
 public class HandlerAutoConfiguration {
+
+	@Autowired(required = false)
+	private HandlerProperties handlerProperties = new HandlerProperties();
 
 	@Bean
 	public Dispatcher dispatcher() {
@@ -65,7 +69,7 @@ public class HandlerAutoConfiguration {
 
 	@Bean
 	public InitChecker initChecker() {
-		return new InitChecker();
+		return new InitChecker(handlerProperties);
 	}
 
 	@Bean

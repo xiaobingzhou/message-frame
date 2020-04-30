@@ -114,7 +114,7 @@ public class Mapper {
 
 	/**
      * <pre>
-     * 解码结果会通过 <code>setBodyJson</code> 方法设置回 <code>HandlerRequest</code>
+     * 解码结果会通过{@code setBodyJson() }方法设置回 {@link HandlerRequest}
      * </pre>
 	 * @param request
 	 * @return
