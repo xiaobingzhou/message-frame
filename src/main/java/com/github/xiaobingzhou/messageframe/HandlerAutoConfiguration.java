@@ -1,10 +1,8 @@
 package com.github.xiaobingzhou.messageframe;
 
 import com.github.xiaobingzhou.messageframe.bind.BindParam;
-import com.bell.mf.bind.impl.*;
 import com.github.xiaobingzhou.messageframe.bind.impl.*;
 import com.github.xiaobingzhou.messageframe.interceptor.ExecutionChain;
-import com.bell.mf.repository.*;
 import com.github.xiaobingzhou.messageframe.repository.BindParamRepository;
 import com.github.xiaobingzhou.messageframe.repository.BodyCodecRepository;
 import com.github.xiaobingzhou.messageframe.repository.HandlerRepository;
