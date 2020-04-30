@@ -20,10 +20,10 @@ public interface BodyCodecRepository {
 
     /**
      * 设置指令码和bodyCodec解码器对应关系
-     * @param commandCode
-     * @return BodyCodec
+     * @param bodyCodec
+     * @param beanName
      */
-    BodyCodec setBodyCodec(String commandCode, BodyCodec bodyCodec);
+    void setBodyCodec(BodyCodec bodyCodec, String beanName);
 
     /**
      * 获取保存的指令码

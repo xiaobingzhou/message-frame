@@ -12,10 +12,10 @@ public interface HandlerRepository {
 
 	/**
 	 * 设置消息帧处理器到仓库里
-	 * @param messageFrameHandler
+	 * @param handler
 	 * @param beanName
 	 */
-	void setHandler(Object messageFrameHandler, String beanName);
+	void setHandler(Object handler, String beanName);
 	
 	/**
 	 * 根据指令码从仓库里或消息帧处理器

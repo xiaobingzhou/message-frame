@@ -68,13 +68,7 @@ public class RepositoryBeanPostProcessor implements BeanPostProcessor, Ordered{
 		if (bean instanceof BodyCodec) {
 			log.debug("{}: BodyCodec({}) ==> {}", this.getClass(), bean.getClass(), beanName);
 			BodyCodec bodyCodec = (BodyCodec)bean;
-			bodyCodec.getCommandCodes().forEach(c -> {
-				BodyCodec exist = bodyCodecRepository.setBodyCodec(c, bodyCodec);
-				if (exist != null) {
-					throw new BeanCreationException(
-							String.format("指令码:[%s] 匹配到的BodyCodec解码器:[%s] 重复, 请检查", c, beanName));
-				}
-			});
+			bodyCodecRepository.setBodyCodec(bodyCodec, beanName);
 		}
 	}
 
