@@ -15,10 +15,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 初始化检查器
@@ -49,16 +46,20 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
     private void checkBindParams(ApplicationContext applicationContext, Set<String> commandCodes) {
         HandlerRepository handlerRepository = applicationContext.getBean(HandlerRepository.class);
         List<BindParam> bindParamList = applicationContext.getBean(BindParamRepository.class).getBindParamList();
-        // 遍历指令码
+        // 遍历指令码，method去重
+        List<Method> checkedMethods = new ArrayList<>();
         for (String commandCode : commandCodes) {
             Method method = handlerRepository.getHandlerMethod(commandCode);
-            Class<?>[] parameterTypes = method.getParameterTypes();
-            // 遍历参数名
+            // 方法去重
+            if (checkedMethods.contains(method)) continue;
+            checkedMethods.add(method);
+
+            // 参数名
             String[] parameterNames = handlerRepository.getHandlerMethodParameterNames(commandCode);
-            for (int i = 0; i < parameterNames.length; i++) {
+            for (String parameterName : parameterNames) {
                 boolean support = false;
                 for (BindParam bindParam : bindParamList) {
-                    if (bindParam.support(parameterNames[i], parameterTypes[i])) {
+                    if (bindParam.support(parameterName)) {
                         support = true;
                         break;
                     }
@@ -67,11 +68,10 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
                     throw new ApplicationContextException(
                             String.format("[%s.%s()] 方法的参数名 [%s] 没有匹配到参数绑定器, 请检查参数名是否正确; " +
                                             "或者想使用自定义的参数绑定器, 那请实现 BindParam 接口并将其添加到spring容器中",
-                            method.getDeclaringClass().getName(), method.getName(), parameterNames[i]));
+                                    method.getDeclaringClass().getName(), method.getName(), parameterName));
                 }
             }
         }
-
     }
 
     private void checkInterceptors(ApplicationContext applicationContext, Set<String> commandCodes) {
