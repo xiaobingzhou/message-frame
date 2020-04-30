@@ -3,8 +3,6 @@ package com.bell.mf;
 import com.bell.mf.bind.BindParam;
 import com.bell.mf.bind.impl.*;
 import com.bell.mf.interceptor.ExecutionChain;
-import com.bell.mf.processor.BindParamBeanPostProcessor;
-import com.bell.mf.processor.BodyCodecBeanPostProcessor;
 import com.bell.mf.repository.*;
 import com.bell.mf.repository.impl.HandlerRepositoryImpl;
 import com.bell.mf.repository.impl.BindParamRepositoryImpl;
@@ -13,8 +11,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.bell.mf.interceptor.ExecutionChainImpl;
-import com.bell.mf.processor.HandlerBeanPostProcessor;
-import com.bell.mf.processor.InterceptorBeanPostProcessor;
+import com.bell.mf.processor.RepositoryBeanPostProcessor;
 
 /**
  * MessageFrameHandlerAutoConfiguration自动配置类
@@ -34,36 +31,13 @@ public class HandlerAutoConfiguration {
 		return dispatcher;
 	}
 
-    @Bean
-	public ExecutionChain executionChain() {
-		return new ExecutionChainImpl();
-	}
-
 	@Bean
-	public BeanPostProcessor interceptorBeanPostProcessor() {
-		InterceptorBeanPostProcessor interceptorBeanPostProcessor = new InterceptorBeanPostProcessor();
-		interceptorBeanPostProcessor.setExecutionChain(executionChain());
-		return interceptorBeanPostProcessor;
-	}
-
-	@Bean
-	public BeanPostProcessor handlerBeanPostProcessor() {
-		HandlerBeanPostProcessor beanPostProcessor = new HandlerBeanPostProcessor();
-		beanPostProcessor.setRepository(handlerRepository());
-		return beanPostProcessor;
-	}
-
-	@Bean
-	public BeanPostProcessor bodyCodecBeanPostProcessor() {
-		BodyCodecBeanPostProcessor beanPostProcessor = new BodyCodecBeanPostProcessor();
-		beanPostProcessor.setRepository(bodyCodecRepository());
-		return beanPostProcessor;
-	}
-
-	@Bean
-	public BeanPostProcessor bindParamBeanPostProcessor() {
-		BindParamBeanPostProcessor beanPostProcessor = new BindParamBeanPostProcessor();
-		beanPostProcessor.setRepository(bindParamRepository());
+	public BeanPostProcessor beanPostProcessor() {
+		RepositoryBeanPostProcessor beanPostProcessor = new RepositoryBeanPostProcessor();
+		beanPostProcessor.setHandlerRepository(handlerRepository());
+		beanPostProcessor.setBindParamRepository(bindParamRepository());
+		beanPostProcessor.setBodyCodecRepository(bodyCodecRepository());
+		beanPostProcessor.setExecutionChain(executionChain());
 		return beanPostProcessor;
 	}
 
@@ -80,6 +54,11 @@ public class HandlerAutoConfiguration {
 	@Bean
 	public BindParamRepository bindParamRepository() {
 		return new BindParamRepositoryImpl();
+	}
+
+	@Bean
+	public ExecutionChain executionChain() {
+		return new ExecutionChainImpl();
 	}
 
 	@Bean
