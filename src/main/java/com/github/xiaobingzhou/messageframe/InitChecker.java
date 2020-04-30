@@ -95,30 +95,8 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
             BodyCodec bodyCodec = bodyCodecRepository.getBodyCodec(commandCode);
             if (Objects.isNull(bodyCodec)) {
                 log.info("Checked ==> No Match BodyCodec: [{}]", commandCode);
-                continue;
             }
-            check(bodyCodec);
         }
     }
 
-    protected void check(BodyCodec bodyCodec) {
-        List<MapperField> mapperFields = bodyCodec.getMapperFields();
-        List<String> existNames = new ArrayList<>();
-        for (MapperField mapperField : mapperFields) {
-            String name = mapperField.getName();
-            // 检查length
-            if (mapperField.getLength() % 2 != 0) {
-                throw new ApplicationContextException(
-                        String.format("BodyCodec解码器:[%s], 字段:[%s], 长度:[%s] 是奇数",
-                                bodyCodec.getClass().getDeclaringClass(), name, mapperField.getLength()));
-            }
-            // 检查name是否相同
-            if (existNames.contains(name)) {
-                throw new ApplicationContextException(
-                        String.format("BodyCodec解码器:[%s], 字段:[%s] 有重复",
-                                bodyCodec.getClass().getDeclaringClass(), name));
-            }
-            existNames.add(name);
-        }
-    }
 }

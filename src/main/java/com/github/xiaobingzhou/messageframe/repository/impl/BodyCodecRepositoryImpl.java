@@ -1,17 +1,16 @@
 package com.github.xiaobingzhou.messageframe.repository.impl;
 
 import com.github.xiaobingzhou.messageframe.codec.BodyCodec;
+import com.github.xiaobingzhou.messageframe.mapper.MapperField;
 import com.github.xiaobingzhou.messageframe.repository.BodyCodecRepository;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationContextException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * bodyCodec解码器的仓库
@@ -36,6 +35,8 @@ public class BodyCodecRepositoryImpl implements BodyCodecRepository, Application
 
     @Override
     public void setBodyCodec(BodyCodec bodyCodec, String beanName) {
+        // 检查解码器
+        check(bodyCodec, beanName);
         List<String> commandCodes = bodyCodec.getCommandCodes();
         for (String commandCode : commandCodes) {
             String exist = BODY_CODEC_MAP.put(commandCode, beanName);
@@ -43,6 +44,27 @@ public class BodyCodecRepositoryImpl implements BodyCodecRepository, Application
                 throw new BeanCreationException(String.format("指令码:[%s] 匹配到两个BodyCodec解码器:[%s] 和 [%s]",
                                 commandCode, beanName, exist));
             }
+        }
+    }
+
+    protected void check(BodyCodec bodyCodec, String beanName) {
+        List<MapperField> mapperFields = bodyCodec.getMapperFields();
+        List<String> existNames = new ArrayList<>();
+        for (MapperField mapperField : mapperFields) {
+            String name = mapperField.getName();
+            // 检查length
+            if (mapperField.getLength() % 2 != 0) {
+                throw new BeanCreationException(
+                        String.format("BodyCodec解码器:[%s], 字段:[%s], 长度:[%s] 是奇数",
+                                beanName, name, mapperField.getLength()));
+            }
+            // 检查name是否相同
+            if (existNames.contains(name)) {
+                throw new BeanCreationException(
+                        String.format("BodyCodec解码器:[%s], 字段:[%s] 有重复",
+                                beanName, name));
+            }
+            existNames.add(name);
         }
     }
 
