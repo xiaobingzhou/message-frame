@@ -110,12 +110,13 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
             if (mapperField.getLength() % 2 != 0) {
                 throw new ApplicationContextException(
                         String.format("BodyCodec解码器:[%s], 字段:[%s], 长度:[%s] 是奇数",
-                                bodyCodec.getClass(), name, mapperField.getLength()));
+                                bodyCodec.getClass().getDeclaringClass(), name, mapperField.getLength()));
             }
             // 检查name是否相同
             if (existNames.contains(name)) {
                 throw new ApplicationContextException(
-                        String.format("BodyCodec解码器:[%s], 字段:[%s] 有重复", bodyCodec.getClass(), name));
+                        String.format("BodyCodec解码器:[%s], 字段:[%s] 有重复",
+                                bodyCodec.getClass().getDeclaringClass(), name));
             }
             existNames.add(name);
         }

@@ -10,6 +10,7 @@ import com.github.xiaobingzhou.messageframe.repository.BodyCodecRepository;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.Ordered;
 
@@ -43,11 +44,11 @@ public class RepositoryBeanPostProcessor implements BeanPostProcessor, Ordered{
 		// 添加处理器
 		addHandler(bean, beanName);
 
-		// 添加参数绑定器
-		addBindParam(bean, beanName);
-
 		// 添加解码器
 		addBodyCodec(bean, beanName);
+
+		// 添加参数绑定器
+		addBindParam(bean, beanName);
 
 		// 添加拦截器
 		addInterceptor(bean, beanName);
@@ -63,20 +64,24 @@ public class RepositoryBeanPostProcessor implements BeanPostProcessor, Ordered{
 		}
 	}
 
-	protected void addBindParam(Object bean, String beanName) {
-		if (bean instanceof BindParam) {
-			log.debug("{}: BindParam({}) {}", this.getClass(), bean.getClass(), beanName);
-			bindParamRepository.addBindParam((BindParam) bean);
-		}
-	}
-
 	protected void addBodyCodec(Object bean, String beanName) {
 		if (bean instanceof BodyCodec) {
 			log.debug("{}: BodyCodec({}) ==> {}", this.getClass(), bean.getClass(), beanName);
 			BodyCodec bodyCodec = (BodyCodec)bean;
 			bodyCodec.getCommandCodes().forEach(c -> {
-				bodyCodecRepository.setBodyCodec(c, bodyCodec);
+				BodyCodec exist = bodyCodecRepository.setBodyCodec(c, bodyCodec);
+				if (exist != null) {
+					throw new BeanCreationException(
+							String.format("指令码:[%s] 匹配到的BodyCodec解码器:[%s] 重复, 请检查", c, beanName));
+				}
 			});
+		}
+	}
+
+	protected void addBindParam(Object bean, String beanName) {
+		if (bean instanceof BindParam) {
+			log.debug("{}: BindParam({}) {}", this.getClass(), bean.getClass(), beanName);
+			bindParamRepository.addBindParam((BindParam) bean);
 		}
 	}
 
