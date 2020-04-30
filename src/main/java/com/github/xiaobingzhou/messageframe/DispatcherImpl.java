@@ -30,7 +30,6 @@ import java.util.Map;
 public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 
 	@Setter
-	@Getter
 	private HandlerRepository handlerRepository;
 	
 	@Setter private ExecutionChain executionChain;
@@ -49,6 +48,11 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 		doHandle(request);
 		// 执行后
 		executionChain.applyPostHandle(request);
+	}
+
+	@Override
+	protected HandlerRepository getHandlerRepository() {
+		return handlerRepository;
 	}
 
 	@Override
