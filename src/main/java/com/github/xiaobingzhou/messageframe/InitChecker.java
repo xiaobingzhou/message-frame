@@ -64,10 +64,12 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
 
             // 参数名
             String[] parameterNames = handlerRepository.getHandlerMethodParameterNames(commandCode);
-            for (String parameterName : parameterNames) {
+            Class<?>[] parameterTypes = method.getParameterTypes();
+            for (int i = 0; i < parameterNames.length; i++) {
                 boolean support = false;
                 for (BindParam bindParam : bindParamList) {
-                    if (bindParam.support(parameterName)) {
+                    if (bindParam.matchGenricType(parameterTypes[i])
+                            && bindParam.support(parameterNames[i])) {
                         support = true;
                         break;
                     }
@@ -77,7 +79,7 @@ public class InitChecker implements ApplicationListener<ContextRefreshedEvent> {
                     throw new ApplicationContextException(
                             String.format("[%s.%s()] 方法的参数名 [%s] 没有匹配到参数绑定器, 请检查参数名是否正确; " +
                                             "或者想使用自定义的参数绑定器, 那请实现 BindParam 接口并将其添加到spring容器中",
-                                    method.getDeclaringClass().getName(), method.getName(), parameterName));
+                                    method.getDeclaringClass().getName(), method.getName(), parameterNames[i]));
                 }
             }
         }

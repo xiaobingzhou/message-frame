@@ -62,8 +62,9 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 	protected Object[] bindParams(HandlerRequest request) {
 	    // 通过request从handlerRepository获取方法
 		Method method = getMethod(request);
+		Class<?>[] parameterTypes = method.getParameterTypes();
 
-	    // 通过request从handlerRepository获取方法参数名
+		// 通过request从handlerRepository获取方法参数名
 		String[] parameterNames = getParameterNames(request);
 
 		int argsLength = parameterNames.length;
@@ -79,7 +80,8 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 			}
 
 			for (BindParam bindParam : bindParamRepository.getBindParamList()) {
-				if (bindParam.support(parameterNames[i])) {
+				if (bindParam.matchGenricType(parameterTypes[i])
+						&& bindParam.support(parameterNames[i])) {
 					log.debug("参数绑定器{}, 绑定参数{}", bindParam, parameterNames[i]);
 					args[i] = bindParam.bind(request);
 					bindParamsCache[i] = bindParam;

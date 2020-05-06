@@ -3,6 +3,7 @@ package com.github.xiaobingzhou.messageframe.enums;
 import com.alibaba.fastjson.JSONObject;
 import com.github.xiaobingzhou.messageframe.IMessageFrame;
 import com.github.xiaobingzhou.messageframe.request.HandlerRequest;
+import com.github.xiaobingzhou.messageframe.response.HandlerResponse;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +21,9 @@ public enum ParameterNameEnum {
 	MESSAGE("message", String.class),
 	SYS_DATE("sysDate", Date.class),
 	BODY_JSON("bodyJson", JSONObject.class),
-	REQUEST("request", HandlerRequest.class);
+	REQUEST("request", HandlerRequest.class),
+	RESPONSE("response", HandlerResponse.class),
+	;
 
 	String name;
 	Class clazz;

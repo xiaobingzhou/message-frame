@@ -3,6 +3,7 @@ package com.github.xiaobingzhou.messageframe.interceptor;
 import java.util.List;
 
 import com.github.xiaobingzhou.messageframe.request.HandlerRequest;
+import com.github.xiaobingzhou.messageframe.response.HandlerResponse;
 
 /**
  * ExecutionChain接口，定义方法拦截器执行
@@ -22,4 +23,6 @@ public interface ExecutionChain {
 	void applyPreHandle(HandlerRequest request);
 	
 	void applyPostHandle(HandlerRequest request);
+
+	void triggerAfterSend(HandlerResponse response);
 }

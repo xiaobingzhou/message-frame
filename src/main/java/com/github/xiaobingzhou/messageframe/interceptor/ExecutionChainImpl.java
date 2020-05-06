@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.github.xiaobingzhou.messageframe.annotation.CommandCode;
 import com.github.xiaobingzhou.messageframe.request.HandlerRequest;
+import com.github.xiaobingzhou.messageframe.response.HandlerResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,8 +101,29 @@ public class ExecutionChainImpl implements ExecutionChain {
         }
     }
 
+    @Override
+    public void triggerAfterSend(HandlerResponse response) {
+        // 全局拦截器-后置处理
+        for (HandlerInterceptor interceptor : interceptors) {
+            afterSend(response, interceptor);
+        }
+
+        // 指令码拦截器-后置处理
+        for (HandlerInterceptor interceptor : commandCodeInterceptors(response.getMessageFrame().getCommandCode())) {
+            afterSend(response, interceptor);
+        }
+    }
+
+    private void afterSend(HandlerResponse response, HandlerInterceptor interceptor) {
+        interceptor.afterSend(response);
+    }
+
     private List<HandlerInterceptor> commandCodeInterceptors(HandlerRequest request) {
         String commandCode = request.getMessageFrame().getCommandCode();
+        return commandCodeInterceptors(commandCode);
+    }
+
+    private List<HandlerInterceptor> commandCodeInterceptors(String commandCode) {
         List<HandlerInterceptor> list = commandCodeInterceptorsMap.get(commandCode);
         return Objects.isNull(list) ? Collections.emptyList() : list;
     }

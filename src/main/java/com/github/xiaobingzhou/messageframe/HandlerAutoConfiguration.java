@@ -4,6 +4,7 @@ import com.github.xiaobingzhou.messageframe.bind.BindParam;
 import com.github.xiaobingzhou.messageframe.bind.impl.*;
 import com.github.xiaobingzhou.messageframe.interceptor.ExecutionChain;
 import com.github.xiaobingzhou.messageframe.mapper.Mapper;
+import com.github.xiaobingzhou.messageframe.processor.SenderBeanPostProcessor;
 import com.github.xiaobingzhou.messageframe.repository.BindParamRepository;
 import com.github.xiaobingzhou.messageframe.repository.BodyCodecRepository;
 import com.github.xiaobingzhou.messageframe.repository.HandlerRepository;
@@ -43,6 +44,13 @@ public class HandlerAutoConfiguration {
 		beanPostProcessor.setHandlerRepository(handlerRepository());
 		beanPostProcessor.setBindParamRepository(bindParamRepository());
 		beanPostProcessor.setBodyCodecRepository(bodyCodecRepository());
+		beanPostProcessor.setExecutionChain(executionChain());
+		return beanPostProcessor;
+	}
+
+	@Bean
+	public BeanPostProcessor senderBeanPostProcessor() {
+		SenderBeanPostProcessor beanPostProcessor = new SenderBeanPostProcessor();
 		beanPostProcessor.setExecutionChain(executionChain());
 		return beanPostProcessor;
 	}
@@ -100,6 +108,11 @@ public class HandlerAutoConfiguration {
 	@Bean
 	public BindParam bodyJsonBindParam() {
 		return new BodyJsonBindParam();
+	}
+
+	@Bean
+	public BindParam senderBindParam() {
+		return new SenderBindParam();
 	}
 
 	@Bean
