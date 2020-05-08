@@ -60,6 +60,6 @@ public interface BindParam<T> {
             return true;
         }
 
-        return interfacesGenricType == genricType;
+        return interfacesGenricType.isAssignableFrom(genricType);
     }
 }
