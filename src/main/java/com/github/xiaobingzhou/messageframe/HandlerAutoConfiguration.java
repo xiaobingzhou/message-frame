@@ -4,13 +4,13 @@ import com.github.xiaobingzhou.messageframe.bind.BindParam;
 import com.github.xiaobingzhou.messageframe.bind.impl.*;
 import com.github.xiaobingzhou.messageframe.interceptor.ExecutionChain;
 import com.github.xiaobingzhou.messageframe.mapper.Mapper;
+import com.github.xiaobingzhou.messageframe.matcher.Matcher;
+import com.github.xiaobingzhou.messageframe.matcher.MatcherImpl;
 import com.github.xiaobingzhou.messageframe.processor.SenderBeanPostProcessor;
 import com.github.xiaobingzhou.messageframe.repository.BindParamRepository;
 import com.github.xiaobingzhou.messageframe.repository.BodyCodecRepository;
 import com.github.xiaobingzhou.messageframe.repository.HandlerRepository;
-import com.github.xiaobingzhou.messageframe.repository.impl.HandlerRepositoryImpl;
-import com.github.xiaobingzhou.messageframe.repository.impl.BindParamRepositoryImpl;
-import com.github.xiaobingzhou.messageframe.repository.impl.BodyCodecRepositoryImpl;
+import com.github.xiaobingzhou.messageframe.repository.impl.*;
 import com.github.xiaobingzhou.messageframe.processor.RepositoryBeanPostProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -28,6 +28,9 @@ public class HandlerAutoConfiguration {
 
 	@Autowired(required = false)
 	private HandlerProperties handlerProperties = new HandlerProperties();
+
+	@Autowired(required = false)
+	Matcher matcher = new MatcherImpl();
 
 	@Bean
 	public Dispatcher dispatcher() {
@@ -57,11 +60,17 @@ public class HandlerAutoConfiguration {
 
 	@Bean
 	public HandlerRepository handlerRepository() {
+		if (handlerProperties.isSupportVersion()) {
+			return new HandlerWithVersionRepositoryImpl(matcher);
+		}
 		return new HandlerRepositoryImpl();
 	}
 
 	@Bean
 	public BodyCodecRepository bodyCodecRepository() {
+		if (handlerProperties.isSupportVersion()) {
+			return new BodyCodecWithVersionRepositoryImpl(matcher);
+		}
 		return new BodyCodecRepositoryImpl();
 	}
 

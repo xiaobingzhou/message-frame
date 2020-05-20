@@ -1,5 +1,7 @@
 package com.github.xiaobingzhou.messageframe.annotation;
 
+import com.github.xiaobingzhou.messageframe.matcher.Matcher;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -19,5 +21,13 @@ public @interface CommandCode {
 	 * @return String[]
 	 */
 	String[] value();
+
+	/**
+	 * Handler方法对应的版本号
+	 * @return String[]
+	 * @since 1.6.3
+	 * @see com.github.xiaobingzhou.messageframe.IMessageFrame#getProtocolVer()
+	 */
+	String version() default Matcher.MATCH_ALL;
 	
 }

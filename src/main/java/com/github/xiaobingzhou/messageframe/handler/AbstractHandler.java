@@ -2,7 +2,6 @@ package com.github.xiaobingzhou.messageframe.handler;
 
 import java.lang.reflect.Method;
 
-import com.github.xiaobingzhou.messageframe.IMessageFrame;
 import com.github.xiaobingzhou.messageframe.repository.HandlerRepository;
 import com.github.xiaobingzhou.messageframe.request.HandlerRequest;
 
@@ -23,20 +22,19 @@ public abstract class AbstractHandler implements Handler {
 	 * @throws HandlerException
 	 */
 	protected void doHandle(HandlerRequest request) throws HandlerException {
-		IMessageFrame messageFrame = request.getMessageFrame();
 		HandlerRepository handlerRepository = getHandlerRepository();
 
-		Method method = handlerRepository.getHandlerMethod(messageFrame.getCommandCode());
+		Method method = handlerRepository.getHandlerMethod(request);
 		if (method == null) {
-			throw new HandlerException(String.format("指令码 [%s] 解析方法未找到",
-					messageFrame.getCommandCode()));
+			throw new HandlerException(String.format("指令码:[%s] 版本号:[%s] 解析方法未找到",
+					request.getCommandCode(), request.getProtocolVer()));
 		}
 
 		try {
-			method.invoke(handlerRepository.getHandler(messageFrame.getCommandCode()),
+			method.invoke(handlerRepository.getHandler(request),
 					getMethodArgs(request));
 		} catch (Exception e) {
-			throw new HandlerException(String.format("执行%s方法出错", method.getName()), e);
+			throw new HandlerException(String.format("执行[%s]方法出错", method.getName()), e);
 		}
 	}
 

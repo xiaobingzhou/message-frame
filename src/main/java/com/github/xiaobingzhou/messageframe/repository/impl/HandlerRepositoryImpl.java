@@ -2,6 +2,7 @@ package com.github.xiaobingzhou.messageframe.repository.impl;
 
 import com.github.xiaobingzhou.messageframe.annotation.CommandCode;
 import com.github.xiaobingzhou.messageframe.repository.HandlerRepository;
+import com.github.xiaobingzhou.messageframe.repository.Store;
 import lombok.Getter;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
@@ -12,7 +13,6 @@ import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -63,8 +63,7 @@ public class HandlerRepositoryImpl implements HandlerRepository, ApplicationCont
 
     protected String[] getParameterNames(Method method) {
         ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
-        String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
-        return parameterNames;
+        return parameterNameDiscoverer.getParameterNames(method);
     }
 
     @Override
@@ -92,8 +91,7 @@ public class HandlerRepositoryImpl implements HandlerRepository, ApplicationCont
         if (isEmpty(commandCode)) {
             return null;
         }
-        Store store = getStore(commandCode);
-        return store;
+        return getStore(commandCode);
     }
 
     @Override
@@ -106,8 +104,7 @@ public class HandlerRepositoryImpl implements HandlerRepository, ApplicationCont
      * @return
      */
     private Store getStore(String commandCode) {
-        Store store = COMMAND_CODE_MATCH_HANDLER_STORE_MAP.get(commandCode);
-        return store;
+        return COMMAND_CODE_MATCH_HANDLER_STORE_MAP.get(commandCode);
     }
 
     private boolean isEmpty(String commandCode) {
@@ -123,42 +120,6 @@ public class HandlerRepositoryImpl implements HandlerRepository, ApplicationCont
     public void destroy() throws Exception {
         this.applicationContext = null;
         COMMAND_CODE_MATCH_HANDLER_STORE_MAP.clear();
-    }
-
-    protected interface Store{
-        String getBeanName();
-        Method getMethod();
-        String[] getParameterNames();
-    }
-
-    class HandlerStore implements Store{
-        private String beanName;
-        private Method method;
-        private String[] parameterNames;
-        public String getBeanName() {
-            return beanName;
-        }
-        public void setBeanName(String beanName) {
-            this.beanName = beanName;
-        }
-        public Method getMethod() {
-            return method;
-        }
-        public void setMethod(Method method) {
-            this.method = method;
-        }
-        public String[] getParameterNames() {
-            return parameterNames;
-        }
-        public void setParameterNames(String[] parameterNames) {
-            this.parameterNames = parameterNames;
-        }
-        @Override
-        public String toString() {
-            return "HandlerStore [beanName=" + beanName + ", method=" + method + ", parameterNames="
-                    + Arrays.toString(parameterNames) + "]";
-        }
-
     }
 
 }

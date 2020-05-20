@@ -7,4 +7,6 @@ public class HandlerProperties {
 
     private boolean skipBodyCodecCheck = true;
 
+    private boolean supportVersion = true;
+
 }

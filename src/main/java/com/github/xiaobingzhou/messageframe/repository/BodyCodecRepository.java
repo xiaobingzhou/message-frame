@@ -1,6 +1,7 @@
 package com.github.xiaobingzhou.messageframe.repository;
 
 import com.github.xiaobingzhou.messageframe.codec.BodyCodec;
+import com.github.xiaobingzhou.messageframe.request.HandlerRequest;
 
 import java.util.Set;
 
@@ -31,5 +32,35 @@ public interface BodyCodecRepository {
      * @since 1.5.4
      */
     Set<String> getCommandCodes();
+
+    // =========匹配版本号==========
+
+    /**
+     * 根据request从仓库里获取对应的bodyCodec解码器
+     * @param request
+     * @return BodyCodec
+     * @since 1.6.3
+     */
+    default BodyCodec getBodyCodec(HandlerRequest request) {
+        return this.getBodyCodec(request.getCommandCode());
+    }
+
+    /**
+     * 获取所有的key
+     * @return Set 所有key
+     * @since 1.6.3
+     */
+    default Set<String> keys(){
+        return this.getCommandCodes();
+    }
+
+    /**
+     * 根据key获取BodyCodec
+     * @return BodyCodec
+     * @since 1.6.3
+     */
+    default BodyCodec value(String key) {
+        return getBodyCodec(key);
+    }
 
 }

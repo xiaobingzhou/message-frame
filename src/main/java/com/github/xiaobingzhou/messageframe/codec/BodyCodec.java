@@ -23,4 +23,10 @@ public interface BodyCodec {
      */
     List<MapperField> getMapperFields();
 
+    /**
+     * 解码器支持的版本
+     * @return String
+     * @since 1.6.3
+     */
+    String getVersion();
 }

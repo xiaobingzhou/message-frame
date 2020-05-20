@@ -97,11 +97,11 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 	}
 
 	protected String[] getParameterNames(HandlerRequest request) {
-		return handlerRepository.getHandlerMethodParameterNames(request.getMessageFrame().getCommandCode());
+		return handlerRepository.getHandlerMethodParameterNames(request);
 	}
 
 	protected Method getMethod(HandlerRequest request) {
-		return handlerRepository.getHandlerMethod(request.getMessageFrame().getCommandCode());
+		return handlerRepository.getHandlerMethod(request);
 	}
 
 }

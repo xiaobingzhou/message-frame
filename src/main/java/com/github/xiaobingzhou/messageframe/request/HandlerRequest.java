@@ -49,4 +49,24 @@ public interface HandlerRequest {
 	 * 设置bodyJson
 	 */
 	void setBodyJson(JSONObject bodyJson);
+
+	/**
+	 * 获取指令码
+	 * @return
+	 * @since 1.6.3
+	 */
+	default String getCommandCode() {
+		IMessageFrame messageFrame = getMessageFrame();
+		return messageFrame == null ? null : messageFrame.getCommandCode();
+	}
+
+	/**
+	 * 获取版本号
+	 * @return
+	 * @since 1.6.3
+	 */
+	default String getProtocolVer() {
+		IMessageFrame messageFrame = getMessageFrame();
+		return messageFrame == null ? null : messageFrame.getProtocolVer();
+	}
 }

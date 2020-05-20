@@ -130,10 +130,10 @@ public class Mapper {
 		}
 
 		// 从bodyCodecRepository仓库中获取该指令码的解码器
-		String commandCode = request.getMessageFrame().getCommandCode();
-		BodyCodec bodyCodec = Mapper.bodyCodecRepository.getBodyCodec(commandCode);
+		BodyCodec bodyCodec = Mapper.bodyCodecRepository.getBodyCodec(request);
 		if (bodyCodec == null) {
-			log.warn("指令码 [{}] bodyCodec解码器未找到", commandCode);
+			log.warn("指令码:[{}] 版本号:[{}] bodyCodec解码器未找到",
+					request.getCommandCode(), request.getProtocolVer());
 			return null;
 		}
 
