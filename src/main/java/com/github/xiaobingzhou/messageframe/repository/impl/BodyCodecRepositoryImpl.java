@@ -3,6 +3,7 @@ package com.github.xiaobingzhou.messageframe.repository.impl;
 import com.github.xiaobingzhou.messageframe.codec.BodyCodec;
 import com.github.xiaobingzhou.messageframe.mapper.MapperField;
 import com.github.xiaobingzhou.messageframe.repository.BodyCodecRepository;
+import lombok.Getter;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.DisposableBean;
@@ -19,6 +20,7 @@ import java.util.*;
  */
 public class BodyCodecRepositoryImpl implements BodyCodecRepository, ApplicationContextAware, DisposableBean {
 
+    @Getter
     private ApplicationContext applicationContext;
 
     /**

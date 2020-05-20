@@ -2,6 +2,7 @@ package com.github.xiaobingzhou.messageframe.repository.impl;
 
 import com.github.xiaobingzhou.messageframe.annotation.CommandCode;
 import com.github.xiaobingzhou.messageframe.repository.HandlerRepository;
+import lombok.Getter;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.DisposableBean;
@@ -23,6 +24,7 @@ import java.util.Set;
  */
 public class HandlerRepositoryImpl implements HandlerRepository, ApplicationContextAware, DisposableBean {
 
+    @Getter
     private ApplicationContext applicationContext;
 
     /**
