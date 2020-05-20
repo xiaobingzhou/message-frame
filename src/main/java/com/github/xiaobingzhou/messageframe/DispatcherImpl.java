@@ -74,7 +74,7 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 		Object[] args = new Object[argsLength];
 		for (int i = 0; i < argsLength; i++) {
 			if (bindParamsCache[i] != null) {
-				log.debug("使用已缓存的参数绑定器{}", bindParamsCache);
+				log.debug("使用已缓存的参数绑定器{}", bindParamsCache[i]);
 				args[i] = bindParamsCache[i].bind(request);
 				continue;
 			}
