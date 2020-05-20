@@ -11,8 +11,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * MessageFrameHandler调度器
@@ -28,7 +28,7 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 
 	@Setter private BindParamRepository bindParamRepository;
 
-	private static Map<Method, BindParam[]> BIND_PARAMS_CACHE_MAP = new HashMap<>(128);
+	private static Map<Method, BindParam[]> BIND_PARAMS_CACHE_MAP = new ConcurrentHashMap<>(128);
 
 	@Override
 	public void dispatch(HandlerRequest request) throws HandlerException {
@@ -103,4 +103,5 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 	protected Method getMethod(HandlerRequest request) {
 		return handlerRepository.getHandlerMethod(request.getMessageFrame().getCommandCode());
 	}
+
 }
