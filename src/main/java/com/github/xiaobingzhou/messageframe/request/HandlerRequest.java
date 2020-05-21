@@ -56,7 +56,7 @@ public interface HandlerRequest {
 	 * @since 1.6.3
 	 */
 	default String getCommandCode() {
-		IMessageFrame messageFrame = getMessageFrame();
+		IMessageFrame messageFrame = this.getMessageFrame();
 		return messageFrame == null ? null : messageFrame.getCommandCode();
 	}
 
@@ -66,7 +66,7 @@ public interface HandlerRequest {
 	 * @since 1.6.3
 	 */
 	default String getProtocolVer() {
-		IMessageFrame messageFrame = getMessageFrame();
+		IMessageFrame messageFrame = this.getMessageFrame();
 		return messageFrame == null ? null : messageFrame.getProtocolVer();
 	}
 }

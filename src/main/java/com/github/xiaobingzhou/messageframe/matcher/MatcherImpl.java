@@ -1,58 +1,54 @@
 package com.github.xiaobingzhou.messageframe.matcher;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import com.github.xiaobingzhou.messageframe.request.HandlerRequest;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.Map;
+
+/**
+ * 匹配器实现类
+ * @author bell.zhouxiaobing
+ * @since 1.6.3
+ */
+@Slf4j
 public class MatcherImpl implements Matcher {
 
-    protected Map<String, String> matchKeyCache = new ConcurrentHashMap<>(128);
-    protected String noMatchKey = "";
+    @Setter
+    @Getter
+    private KeyGenerator keyGenerator = new KeyGenerator(){};
 
     @Override
-    public Object match(KeyGenerator keyGenerator, Map<String, ?> keyMap) {
+    public Object match(HandlerRequest request, Map keyMap) {
         if (keyMap == null)
             return null;
 
-        String key = keyGenerator.generateKey();
+        String key = keyGenerator.generateKey(request.getCommandCode(), request.getProtocolVer());
 
-        // 匹配到的key
-        String matchCompleteKey = matchKeyCache.get(key);
-        if (matchCompleteKey != null) {
-            return noMatchKey.equals(matchCompleteKey) ? null : keyMap.get(matchCompleteKey);
-        }
-
-        matchCompleteKey = key;
         Object result = keyMap.get(key);
 
-        if (result == null) {
-            // 匹配*号
-            for (int i = key.length(); i >= key.length() - 4; i--) {
-                matchCompleteKey = key.substring(0, i) + MATCH_ALL;
-                result = keyMap.get(matchCompleteKey);
-                if (result != null) {
-                    break;
-                }
+        // 全值匹配
+        if (result != null)
+            return result;
+
+        // 匹配*号
+        int end = key.length() - 4;
+        for (int i = key.length() - 1; i >= end; i--) {
+            String matchKey = key.substring(0, i) + MATCH_ALL;
+            result = keyMap.get(matchKey);
+            if (result != null) {
+                break;
             }
         }
 
-        matchKeyCache.put(key, matchCompleteKey == null ? noMatchKey : matchCompleteKey);
+        // 匹配到值，将结果设置会到map中，方便下次直接使用key获取
+        if (result != null)
+            keyMap.put(key, result);
+
+        log.debug("[last match] key:[{}] value:[{}]", key, result);
 
         return result;
     }
 
-    public static void main(String[] args) {
-        MatcherImpl matcher = new MatcherImpl();
-        Map<String, String> keyMap = new HashMap<>();
-        keyMap.put("1234:1234", "1");
-        keyMap.put("1234:123*", "2");
-        keyMap.put("1234:12*", "3");
-        keyMap.put("1234:1*", "4");
-        keyMap.put("1234:*", "5");
-        System.out.println(matcher.match(() -> "1234:1234", keyMap));
-        System.out.println(matcher.match(() -> "1234:1234", keyMap));
-        System.out.println(matcher.match(() -> "1234:1233", keyMap));
-        System.out.println(matcher.match(() -> "1234:1222", keyMap));
-        System.out.println(matcher.match(() -> "1234:1211", keyMap));
-    }
 }

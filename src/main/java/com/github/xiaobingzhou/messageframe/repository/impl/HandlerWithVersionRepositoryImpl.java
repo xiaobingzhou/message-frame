@@ -51,7 +51,8 @@ public class HandlerWithVersionRepositoryImpl extends HandlerRepositoryImpl {
 
             for (String commandCode : annotation.value()) {
                 checkVersion(version, method, beanName);
-                Store exist = keyStoreMap.put(getKey(commandCode, version), handlerStore);
+                String generateKey = matcher.getKeyGenerator().generateKey(commandCode, version);
+                Store exist = keyStoreMap.put(generateKey, handlerStore);
 
                 if (exist != null) {
                     String methodName = getMethodName(method);
@@ -128,19 +129,13 @@ public class HandlerWithVersionRepositoryImpl extends HandlerRepositoryImpl {
     }
 
     protected Store getStore(HandlerRequest request) {
-        String commandCode = request.getCommandCode();
-        String protocolVer = request.getProtocolVer();
-        return (Store) matcher.match(() -> getKey(commandCode, protocolVer), keyStoreMap);
-
-    }
-
-    protected String getKey(String commandCode, String protocolVer) {
-        return HandlerRepository.class.getSimpleName() + ":" + commandCode + ":" + protocolVer;
+        return (Store) matcher.match(request, keyStoreMap);
     }
 
     @Override
     public void destroy() throws Exception {
         super.destroy();
         keyStoreMap.clear();
+        commandCodes.clear();
     }
 }

@@ -30,16 +30,8 @@ public class BodyCodecWithVersionRepositoryImpl extends BodyCodecRepositoryImpl 
 
     @Override
     public BodyCodec getBodyCodec(HandlerRequest request) {
-        String commandCode = request.getCommandCode();
-        String protocolVer = request.getProtocolVer();
-
-        String beanName = (String) matcher.match(() -> getKey(commandCode, protocolVer), bodyCodecMap);
-
+        String beanName = (String) matcher.match(request, bodyCodecMap);
         return getBodyCodecByBeanName(beanName);
-    }
-
-    protected String getKey(String commandCode, String protocolVer) {
-        return BodyCodecRepository.class.getSimpleName() + ":" + commandCode + ":" + protocolVer;
     }
 
     protected BodyCodec getBodyCodecByBeanName(String beanName) {
@@ -53,7 +45,8 @@ public class BodyCodecWithVersionRepositoryImpl extends BodyCodecRepositoryImpl 
         String version = bodyCodec.getVersion();
 
         for (String commandCode : bodyCodec.getCommandCodes()) {
-            String exist = bodyCodecMap.put(getKey(commandCode, version), beanName);
+            String generateKey = matcher.getKeyGenerator().generateKey(commandCode, version);
+            String exist = bodyCodecMap.put(generateKey, beanName);
 
             if (exist != null) {
                 throw new BeanCreationException(String.format("指令码:[%s] 版本号:[%s] 匹配到两个BodyCodec解码器:[%s] 和 [%s]",

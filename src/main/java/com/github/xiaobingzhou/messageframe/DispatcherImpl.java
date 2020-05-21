@@ -28,7 +28,7 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 
 	@Setter private BindParamRepository bindParamRepository;
 
-	private static Map<Method, BindParam[]> BIND_PARAMS_CACHE_MAP = new ConcurrentHashMap<>(128);
+	private Map<Method, BindParam[]> bindParamsCacheMap = new ConcurrentHashMap<>(128);
 
 	@Override
 	public void dispatch(HandlerRequest request) throws HandlerException {
@@ -69,7 +69,7 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 
 		int argsLength = parameterNames.length;
 		// 通过方法从缓存中获取参数绑定器
-		BindParam[] bindParamsCache = BIND_PARAMS_CACHE_MAP.getOrDefault(method, new BindParam[argsLength]);
+		BindParam[] bindParamsCache = this.bindParamsCacheMap.getOrDefault(method, new BindParam[argsLength]);
 
 		Object[] args = new Object[argsLength];
 		for (int i = 0; i < argsLength; i++) {
@@ -91,7 +91,7 @@ public class DispatcherImpl extends AbstractHandler implements Dispatcher{
 		}
 
 		// 设置缓存
-		BIND_PARAMS_CACHE_MAP.putIfAbsent(method, bindParamsCache);
+		this.bindParamsCacheMap.putIfAbsent(method, bindParamsCache);
 
 		return args;
 	}

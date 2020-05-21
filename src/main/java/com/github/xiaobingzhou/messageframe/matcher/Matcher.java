@@ -1,5 +1,7 @@
 package com.github.xiaobingzhou.messageframe.matcher;
 
+import com.github.xiaobingzhou.messageframe.request.HandlerRequest;
+
 import java.util.Map;
 
 /**
@@ -15,11 +17,22 @@ public interface Matcher {
     String MATCH_ALL = "*";
 
     /**
-     * 根据key匹配keyMap
-     * @param keyGenerator
+     * 根据request匹配keyMap
+     * @param request
      * @param keyMap
      * @return Object 匹配到keyMap的value值
      */
-    Object match(KeyGenerator keyGenerator, Map<String, ?> keyMap);
+    Object match(HandlerRequest request, Map keyMap);
 
+    /**
+     * 获取keyGenerator
+     * @return
+     */
+    KeyGenerator getKeyGenerator();
+
+    /**
+     * 设置keyGenerator
+     * @param keyGenerator
+     */
+    void setKeyGenerator(KeyGenerator keyGenerator);
 }
