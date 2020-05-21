@@ -17,16 +17,16 @@ public interface Matcher {
     String MATCH_ALL = "*";
 
     /**
-     * 根据request匹配keyMap
-     * @param request
-     * @param keyMap
-     * @return Object 匹配到keyMap的value值
+     * 根据request匹配keyMap的value值
+     * @param request 请求
+     * @param keyMap keyMap
+     * @return Object 返回匹配到keyMap的key所对应的value值
      */
     Object match(HandlerRequest request, Map keyMap);
 
     /**
      * 获取keyGenerator
-     * @return
+     * @return KeyGenerator
      */
     KeyGenerator getKeyGenerator();
 

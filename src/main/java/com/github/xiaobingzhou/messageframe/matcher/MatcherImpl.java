@@ -42,7 +42,7 @@ public class MatcherImpl implements Matcher {
             }
         }
 
-        // 匹配到值，将结果设置会到map中，方便下次直接使用key获取
+        // 匹配到值，将结果设置回到map中，方便下次直接使用key获取
         if (result != null)
             keyMap.put(key, result);
 
