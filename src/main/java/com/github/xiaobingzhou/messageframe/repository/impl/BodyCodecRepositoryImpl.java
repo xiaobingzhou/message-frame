@@ -27,7 +27,7 @@ public class BodyCodecRepositoryImpl implements BodyCodecRepository, Application
      * 保存指令码和bodyCodec解码器的对应关系
      * body_codec_map
      */
-    private static Map<String, String> BODY_CODEC_MAP = new HashMap<>(128);
+    private static Map<String, String> BODY_CODEC_MAP = new HashMap<>();
 
     @Override
     public BodyCodec getBodyCodec(String commandCode) {

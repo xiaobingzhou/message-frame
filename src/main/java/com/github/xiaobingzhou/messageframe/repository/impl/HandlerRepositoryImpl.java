@@ -31,7 +31,7 @@ public class HandlerRepositoryImpl implements HandlerRepository, ApplicationCont
      * 保存指令码和spring中的HandlerStore的对应关系
      * command_code_match__handler_store_map
      */
-    private static Map<String, Store> COMMAND_CODE_MATCH_HANDLER_STORE_MAP = new HashMap<>(128);
+    private static Map<String, Store> COMMAND_CODE_MATCH_HANDLER_STORE_MAP = new HashMap<>();
 
     @Override
     public void setHandler(Object handler, String beanName) {

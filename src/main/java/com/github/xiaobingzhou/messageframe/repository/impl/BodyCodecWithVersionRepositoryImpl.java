@@ -5,7 +5,6 @@ import com.github.xiaobingzhou.messageframe.matcher.Matcher;
 import com.github.xiaobingzhou.messageframe.repository.BodyCodecRepository;
 import com.github.xiaobingzhou.messageframe.request.HandlerRequest;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.DisposableBean;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,9 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * bodyCodec解码器的仓库
  * 需要匹配版本号
  * @author bell.zhouxiaobing
- * @since 1.5.4
+ * @since 1.6.3
  */
-public class BodyCodecWithVersionRepositoryImpl extends BodyCodecRepositoryImpl implements DisposableBean {
+public class BodyCodecWithVersionRepositoryImpl extends BodyCodecRepositoryImpl {
 
     protected Map<String, String> bodyCodecMap = new ConcurrentHashMap<>(128);
 

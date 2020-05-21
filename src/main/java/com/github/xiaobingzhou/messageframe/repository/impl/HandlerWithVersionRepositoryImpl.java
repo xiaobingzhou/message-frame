@@ -11,6 +11,7 @@ import org.springframework.beans.factory.BeanCreationException;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 请求处理器仓库，需要匹配指令码和版本号
@@ -21,7 +22,7 @@ import java.util.*;
 @Slf4j
 public class HandlerWithVersionRepositoryImpl extends HandlerRepositoryImpl {
 
-    protected Map<String, Store> keyStoreMap = new HashMap<>(128);
+    protected Map<String, Store> keyStoreMap = new ConcurrentHashMap<>(128);
 
     protected Set<String> commandCodes = new HashSet<>();
 
