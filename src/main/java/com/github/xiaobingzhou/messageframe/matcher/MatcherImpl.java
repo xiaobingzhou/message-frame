@@ -24,7 +24,7 @@ public class MatcherImpl implements Matcher {
         if (keyMap == null)
             return null;
 
-        String key = keyGenerator.generateKey(request.getCommandCode(), request.getProtocolVer());
+        String key = this.getKeyGenerator().generateKey(request.getCommandCode(), request.getProtocolVer());
 
         Object result = keyMap.get(key);
 
